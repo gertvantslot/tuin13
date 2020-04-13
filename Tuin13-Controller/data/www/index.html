@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1 class="display-3">Tuin-13</h1>
+            <hr>
+            <div class="lead">Bestuur elementen in de tuin.</div>
+        </div>
+
+        <div class="row">
+
+            <div class="col">
+                <div class="card border-info">
+                    <div class="card-header lead">
+                        Momenteel
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                <label class="custom-control-label" for="customSwitch1">Lamp</label>
+                            </div>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch2">
+                                <label class="custom-control-label" for="customSwitch2">Water</label>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <h2 class="display-4">Instellingen</h2>
+        </div>
+
+        <div class="card-deck">
+            <div class="card border-primary">
+                <div class="card-header lead">
+                    Lamp
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Ochtend: 07:00 -> Zon-op</p>
+                    <p class="card-text">Avond: Zon-onder -> 22:00</p>
+                    <p class="card-text">Manueel: -> 03:00</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">Aanpassen</a>
+                </div>
+            </div>
+            <div class="card border-success">
+                <div class="card-header lead">
+                    Water
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Avond: Zon-onder -> 1 uur</p>
+                    <p class="card-text">Manueel: 30 min</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-success">Aanpassen</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <h2 class="display-4">Status</h2>
+        </div>
+
+        <div class="card-deck">
+            <div class="card border-secondary">
+                <div class="card-header lead">
+                    Tijd
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><span class="second" data-src="/api/time/current.txt"></span></p>
+                    <p class="card-text">Zon op: 06:34</p>
+                    <p class="card-text">Zon onder: 20:27</p>
+                </div>
+                <div class="card-footer">
+                    &nbsp;
+                </div>
+            </div>
+
+            <div class="card border-success">
+                <div class="card-header lead">
+                    Afgelopen 24 uur
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Water: 10min</p>
+                    <p class="card-text">Lamp: 2 uur 4 min</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-success">Aanpassen</a>
+                </div>
+
+            </div>
+
+
+            <div class="card border-success">
+                <div class="card-header lead">
+                    Hardware
+                </div>
+                <div class="card-body">
+                    <dl class="card-text">
+                        <dt>IP address</dt>
+                        <dd class="load" data-src="api/network/ipaddress.txt">---</dd>
+
+                        <dt>SSID</dt>
+                        <dd class="load" data-src="api/network/ssid.txt">---</dd>
+
+                        <dt>Actief sinds</dt>
+                        <dd class="load" data-src="api/time/start.txt">---</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <hr />
+            Tuin 13 | By GvS
+        </div>
+    
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $(function () {
+            $(".load").each(function () {
+                var el = $(this);
+                var src = $(this).data("src");
+                $.ajax({
+                    url: src
+                })
+                    .done(function (data) {
+                        el.text(data);
+                    });
+            });
+
+            window.setInterval(function() {
+                $(".second").each(function () {
+                var el = $(this);
+                var src = $(this).data("src");
+                $.ajax({
+                    url: src
+                })
+                    .done(function (data) {
+                        el.text(data);
+                    });
+            });
+            }, 1000);
+        });
+    </script>
+
+</body>
+
+</html>
