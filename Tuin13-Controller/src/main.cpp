@@ -6,8 +6,13 @@
 
 #include <server.h>
 
+#include "tuinWebServer.h"
+
 const char* ssid = __WIFI_SSID__;
 const char* password = __WIFI_PASW__;
+
+Timezone CET;
+tuinWebServer server(80);
 
 void setup() {
     // Initialize and wait for serial
@@ -21,6 +26,7 @@ void setup() {
     Serial.println(" Tuin13 - 2020 - Starting");
     Serial.println("==========================");
     Serial.println();
+    delay(1000);
 
     // WiFi connection
     Serial.println("==========================");
@@ -38,6 +44,12 @@ void setup() {
     Serial.println(WiFi.localIP());
     Serial.println();
 
+    WiFi.enableIpV6();
+    delay(1000);
+    Serial.println(WiFi.localIPv6());
+    Serial.println();
+    delay(1000);
+
     // Time sync
     Serial.println("==========================");
     Serial.println("Time sync");
@@ -46,15 +58,23 @@ void setup() {
     Serial.println("Time is set.");
     Serial.println(CET.dateTime());
     Serial.println();
+    delay(1000);
 
     // WebServer startup
     Serial.println("==========================");
     Serial.println("Filesystem");
     SPIFFS.begin();
+    Serial.println("Filesystem started");
     Serial.println();
+    delay(1000);
 
     // WebServer startup
-    setupWebServer();
+    Serial.println("==========================");
+    Serial.println("Webserver");
+    server.start(&CET, SPIFFS);
+    Serial.println("Webserver started");
+    Serial.println();
+    delay(1000);
 
     // Hardware startup
     Serial.println("==========================");
@@ -71,4 +91,5 @@ void setup() {
 
 void loop() {
     // put your main code here, to run repeatedly:
+    events();
 }
