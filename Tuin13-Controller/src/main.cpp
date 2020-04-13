@@ -80,6 +80,9 @@ void setup() {
     Serial.println("==========================");
     Serial.println("Hardware");
 
+
+    Serial.println();
+
     // Read settings and status
     Serial.println("==========================");
     Serial.println("Configuration");

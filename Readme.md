@@ -26,3 +26,18 @@ Hardware
 * ~~Water~~ Optioneel
   * Water ventiel
   * Water meter
+
+Pins to use
+===========
+
+| Pin         | I/O      | Gebruik
+|-------------|----------|--------------
+| **GPIO ?**  | I-Pullup | _Gereserveerd:_ Knop - Water
+| **GPIO ?**  | O        | _Gereserveerd:_ LED-water
+| **GPIO 17** | I-Pullup | Knop - Licht
+| **GPIO 16** | O        | LED - licht
+| **GPIO 5**  | O        | Relay - licht
+
+![Pins][pins]
+
+[pins]: ./img/pinout.jpg
