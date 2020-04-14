@@ -7,11 +7,15 @@
 #include <WiFi.h>
 #include <ezTime.h>
 
+#include "tuinLamp.h"
+
 class tuinWebServer : public AsyncWebServer {
    private:
     /* data */
     Timezone *m_timezone;
     time_t m_startTime;
+
+    tuinLamp *m_lamp;
 
     // Handle web requests
     void notFound(AsyncWebServerRequest *request) {
@@ -40,9 +44,17 @@ class tuinWebServer : public AsyncWebServer {
         request->send(200, "text/plain", m_timezone->dateTime(m_startTime));
     }
 
+    void onSunrise(AsyncWebServerRequest *request) {
+        request->send(200, "text/plain", m_timezone->dateTime(m_lamp->nextSunrise()));
+    }
+
+    void onSunset(AsyncWebServerRequest *request) {
+        request->send(200, "text/plain", m_timezone->dateTime(m_lamp->nextSunset()));
+    }
+
    public:
     tuinWebServer(uint16_t port);
-    void start(Timezone *timezone, fs::FS& fs);
+    void start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp);
     ~tuinWebServer();
 };
 

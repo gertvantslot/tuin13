@@ -4,8 +4,7 @@
 #include <myWiFi.h>
 #include <SPIFFS.h>
 
-#include <server.h>
-
+#include "pins.h"
 #include "tuinWebServer.h"
 #include "tuinLamp.h"
 
@@ -14,6 +13,7 @@ const char* password = __WIFI_PASW__;
 
 Timezone CET;
 tuinWebServer server(80);
+tuinLamp lamp;
 
 void setup() {
     // Initialize and wait for serial
@@ -72,7 +72,7 @@ void setup() {
     // WebServer startup
     Serial.println("==========================");
     Serial.println("Webserver");
-    server.start(&CET, SPIFFS);
+    server.start(&CET, SPIFFS, &lamp);
     Serial.println("Webserver started");
     Serial.println();
     delay(1000);
@@ -81,6 +81,9 @@ void setup() {
     Serial.println("==========================");
     Serial.println("Hardware");
 
+    lamp.setPosition(51.313363, 4.4954359);
+    lamp.setTimezone(&CET);
+    lamp.setPins(PIN_TUIN_LAMP_LED, PIN_TUIN_LAMP_BUTTON, PIN_TUIN_LAMP_RELAY);
 
     Serial.println();
 
