@@ -1,6 +1,7 @@
 {
     "name" : "tuinWeb",
-    "depencies" : [
+    "version" : "0.0.0",
+    "dependencies" : [
         { "name": "ezTime" },
         { "name": "ESP Async WebServer"}
     ]

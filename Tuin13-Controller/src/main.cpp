@@ -7,6 +7,7 @@
 #include <server.h>
 
 #include "tuinWebServer.h"
+#include "tuinLamp.h"
 
 const char* ssid = __WIFI_SSID__;
 const char* password = __WIFI_PASW__;

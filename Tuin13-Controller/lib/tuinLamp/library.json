@@ -1,0 +1,8 @@
+{
+    "name": "tuinLamp",
+    "version" : "0.0.0",
+
+    "dependencies": [
+        { "name": "ezTime" }
+    ]
+}
