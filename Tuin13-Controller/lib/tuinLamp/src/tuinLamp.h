@@ -20,6 +20,12 @@ private:
 
     bool m_autoActive;
     bool m_manual_override;
+    bool m_manual_force_on;
+
+    time_t m_manual_override_duration = 4 * SECS_PER_HOUR; // Max 4 uur manual override
+    time_t m_manual_override_start;
+
+    bool m_debug = false;
 
 public:
     tuinLamp(/* args */);

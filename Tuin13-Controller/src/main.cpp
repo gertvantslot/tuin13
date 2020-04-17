@@ -1,8 +1,17 @@
 #include <Arduino.h>
+
+#ifdef ESP32
+#include <FS.h>
+#include <SPIFFS.h>
 #include <WiFi.h>
+#include <AsyncTCP.h>
+#elif defined(ESP8266)
+#include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h>
+#endif
+
 #include <ezTime.h>
 #include <myWiFi.h>
-#include <SPIFFS.h>
 
 #include "pins.h"
 #include "tuinWebServer.h"
@@ -73,16 +82,20 @@ void setup() {
     Serial.println(WiFi.localIP());
     Serial.println();
 
-    WiFi.enableIpV6();
+    #ifdef ESP32
+        WiFi.enableIpV6();
+    #endif
     delay(1000);
-    Serial.println(WiFi.localIPv6());
+    #ifdef ESP32
+        Serial.println(WiFi.localIPv6());
+    #endif
     Serial.println();
     delay(1000);
 
     // Time sync
     Serial.println("==========================");
     Serial.println("Time sync");
-    setDebug(DEBUG);  
+    // setDebug(DEBUG);  
     waitForSync();
     if (!CET.setCache(0)) CET.setLocation("Europe/Berlin");
     Serial.println("Time is set.");
@@ -110,7 +123,7 @@ void setup() {
     lampMorning.setStop(TIME_MODE_SUNRISE, 0, 0);
 
     lampEvening.setStart(TIME_MODE_SUNSET, 0, 0);
-    lampEvening.setStop(TIME_MODE_MIDNIGHT, 22, 00);
+    lampEvening.setStop(TIME_MODE_MIDNIGHT, 22, 48);
 
     lampMorning.link(lampEvening);
     lamp.setSchedule(lampMorning);
@@ -150,9 +163,9 @@ void setup() {
 void loop() {
     // put your main code here, to run repeatedly:
     events();
-    lampButton.loop();
     
-    if (millis() % 10000 == 0) {
+    if (millis() % 100 == 0) {
+        lampButton.loop();
         lamp.payload();
     }
 }

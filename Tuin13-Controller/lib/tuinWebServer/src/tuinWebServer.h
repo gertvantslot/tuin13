@@ -1,10 +1,18 @@
 #pragma once
 
 #include <Arduino.h>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
+
+#ifdef ESP32
+#include <FS.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
+#include <AsyncTCP.h>
+#elif defined(ESP8266)
+#include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h>
+#endif
+
+#include <ESPAsyncWebServer.h>
 #include <ezTime.h>
 
 #include "tuinLamp.h"
@@ -29,7 +37,11 @@ class tuinWebServer : public AsyncWebServer {
     }
 
     void onIpAddressV6(AsyncWebServerRequest *request) {
+        #ifdef ESP32
         request->send(200, "text/plain", WiFi.localIPv6().toString());
+        #else
+        request->send(200, "text/plain", "");
+        #endif
     }
 
     void onSSID(AsyncWebServerRequest *request) {

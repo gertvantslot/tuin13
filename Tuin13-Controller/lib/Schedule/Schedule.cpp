@@ -1,6 +1,12 @@
 
 #include "Schedule.h"
 
+#define debug(args...) \
+    if (m_debug) Serial.print(args)
+#define debugln(args...) \
+    if (m_debug) Serial.println(args)
+
+
 time_t ScheduleTime::whenSunrise(Dusk2Dawn &sun, time_t t) {
     // Get reference time of current sunrise
     int y = year(t);
@@ -18,13 +24,13 @@ time_t ScheduleTime::whenSunset(Dusk2Dawn &sun, time_t t) {
     int d = day(t);
 
     time_t sunset = sun.sunset(y, m, d, false) * 60;
-    Serial.print(" - sunset = ");
-    Serial.print(defaultTZ->dateTime(sunset));
+    debug(" - sunset = ");
+    debug(defaultTZ->dateTime(sunset));
 
     time_t result = previousMidnight(t) + sunset + m_offset;
-    Serial.print(" - ");
-    Serial.print(defaultTZ->dateTime(result));
-    Serial.println();
+    debug(" - ");
+    debug(defaultTZ->dateTime(result));
+    debugln();
 
     return result;
 }
@@ -37,14 +43,14 @@ ScheduleTime::ScheduleTime(uint8_t mode, int hours, int minutes) {
 time_t ScheduleTime::when(Dusk2Dawn &sun, time_t t) {
     switch (m_mode) {
         case TIME_MODE_MIDNIGHT:
-            Serial.println(" - midnight");
-            Serial.println(m_offset);
+            debugln(" - midnight");
+            debugln(m_offset);
             return previousMidnight(t) + m_offset;
         case TIME_MODE_SUNRISE:
-            Serial.println(" - sunrise");
+            debugln(" - sunrise");
             return whenSunrise(sun, t);
         case TIME_MODE_SUNSET:
-            Serial.println(" - sunset");
+            debugln(" - sunset");
             return whenSunset(sun, t);
         default:
             return -1;
@@ -89,28 +95,28 @@ void Schedule::link(Schedule &next) {
 }
 
 bool Schedule::isActive(Dusk2Dawn &sun, time_t t) {
-    Serial.println("Check schedule-item:");
+    debugln("Check schedule-item:");
 
-    Serial.print("now : ");
-    Serial.println(defaultTZ->dateTime(t));
+    debug("now : ");
+    debugln(defaultTZ->dateTime(t));
     time_t startSec = m_start.when(sun, t);
 
-    Serial.print("start : ");
-    Serial.println(defaultTZ->dateTime(startSec));
+    debug("start : ");
+    debugln(defaultTZ->dateTime(startSec));
 
     if (t >= startSec) {
-        Serial.println(" - start passed");
+        debugln(" - start passed");
         time_t stopSec = m_stop.when(sun, t);
         if (t <= stopSec) return true;
-        Serial.println(" - stop passed");
+        debugln(" - stop passed");
     }
 
     if (m_next) {
-        Serial.println(" - Trying next item");
+        debugln(" - Trying next item");
         return m_next->isActive(sun, t);
     }
 
-    Serial.println("Schedule - Not active");
+    debugln("Schedule - Not active");
     return false;
 }
 

@@ -16,6 +16,7 @@ class ScheduleTime {
 
     time_t whenSunrise(Dusk2Dawn &sun, time_t t);
     time_t whenSunset(Dusk2Dawn &sun, time_t t);
+    bool m_debug = false;
 
    public:
     ScheduleTime(uint8_t mode, int hours, int minutes);
@@ -31,6 +32,8 @@ class Schedule {
     ScheduleTime m_stop = ScheduleTime(TIME_MODE_SUNRISE, 0, 0);
 
     Schedule *m_next;
+
+    bool m_debug = false;
 
    public:
     Schedule(/* args */);
