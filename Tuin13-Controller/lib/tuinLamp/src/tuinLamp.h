@@ -3,39 +3,39 @@
 #include <Arduino.h>
 #include <ezTime.h>
 #include <Dusk2Dawn.h>
+#include <Schedule.h>
+#include <button.h>
 
 class tuinLamp
 {
 private:
     /* data */
-    float m_lat = 0.0;
-    float m_lon = 0.0;
     Timezone *m_time;
-
-    Dusk2Dawn m_sun = Dusk2Dawn(0,0,0);
+    Dusk2Dawn *m_sun;
+    Schedule *m_schedule;
+    button *m_button;
 
     uint8_t pin_led;
-    uint8_t pin_button;
     uint8_t pin_relay;
 
-    void updateSun();
-    time_t sunrise(time_t midnight);
-    time_t sunset(time_t midnight);
+    bool m_autoActive;
+    bool m_manual_override;
 
 public:
     tuinLamp(/* args */);
     ~tuinLamp();
 
-    void setPosition(float lat, float lon);
+    void prepare();
+
+    void setPosition(Dusk2Dawn *sun);
     void setTimezone(Timezone *time);
-    void setPins(uint8_t led, uint8_t button, uint8_t relay);
+    void setSchedule(Schedule &first);
+    void setButton(button *btn);
 
-    time_t nextSunrise();
-    time_t sunriseToday();
-    time_t sunriseTomorrow();
+    void pins(uint8_t led, uint8_t relay);
 
-    time_t nextSunset();
-    time_t sunsetToday();
-    time_t sunsetTomorrow();
+    bool isActive();
+
+    void payload();
 
 };

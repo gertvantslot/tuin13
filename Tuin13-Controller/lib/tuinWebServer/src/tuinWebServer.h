@@ -14,7 +14,8 @@ class tuinWebServer : public AsyncWebServer {
     /* data */
     Timezone *m_timezone;
     time_t m_startTime;
-
+    
+    Dusk2Dawn *m_sun;
     tuinLamp *m_lamp;
 
     // Handle web requests
@@ -44,17 +45,35 @@ class tuinWebServer : public AsyncWebServer {
         request->send(200, "text/plain", m_timezone->dateTime(m_startTime));
     }
 
+    String sunRise() {
+        tmElements_t tm;
+        time_t current = m_timezone->now();
+        breakTime(current, tm);
+        int minutes = m_sun->sunrise(tm.Year, tm.Month, tm.Day, false);
+        time_t result = previousMidnight(current) + minutes * SECS_PER_MIN;
+        return m_timezone->dateTime(result);
+    }
+
+    String sunSet() {
+        tmElements_t tm;
+        time_t current = m_timezone->now();
+        breakTime(current, tm);
+        int minutes = m_sun->sunset(tm.Year, tm.Month, tm.Day, false);
+        time_t result = previousMidnight(current) + minutes * SECS_PER_MIN;
+        return m_timezone->dateTime(result);
+    }
+
     void onSunrise(AsyncWebServerRequest *request) {
-        request->send(200, "text/plain", m_timezone->dateTime(m_lamp->nextSunrise()));
+        request->send(200, "text/plain", sunRise());
     }
 
     void onSunset(AsyncWebServerRequest *request) {
-        request->send(200, "text/plain", m_timezone->dateTime(m_lamp->nextSunset()));
+        request->send(200, "text/plain", sunSet());
     }
 
    public:
     tuinWebServer(uint16_t port);
-    void start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp);
+    void start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp, Dusk2Dawn *sun);
     ~tuinWebServer();
 };
 

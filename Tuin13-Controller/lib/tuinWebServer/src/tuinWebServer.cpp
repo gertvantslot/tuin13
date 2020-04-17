@@ -6,10 +6,11 @@ tuinWebServer ::tuinWebServer(uint16_t port) : AsyncWebServer(port) {
 tuinWebServer ::~tuinWebServer() {
 }
 
-void tuinWebServer::start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp) {
+void tuinWebServer::start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp, Dusk2Dawn *sun) {
     m_timezone = timezone;
     m_startTime = timezone->now();
     m_lamp = lamp;
+    m_sun = sun;
 
     onNotFound([this](AsyncWebServerRequest *request){ this->notFound(request); });
     on("/api/network/ipaddress.txt", [this](AsyncWebServerRequest *request){ this->onIpAddress(request); });

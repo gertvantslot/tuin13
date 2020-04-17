@@ -13,6 +13,19 @@
         "initializer_list": "cpp",
         "regex": "cpp",
         "bitset": "cpp",
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "sstream": "cpp",
+        "streambuf": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "iomanip": "cpp",
+        "ostream": "cpp",
+        "algorithm": "cpp",
+        "stdexcept": "cpp",
+        "typeinfo": "cpp"
     }
 }
