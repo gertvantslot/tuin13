@@ -104,7 +104,7 @@ class tuinWebServer : public AsyncWebServer {
     }
 
     void onLampStatus(AsyncWebServerRequest *request) {
-        char * description;
+        const char * description;
         if (m_lamp->isActive()) {
             if (m_lamp->isForceOn()) {
                 description = "AAN - Blijft aan";
@@ -118,6 +118,8 @@ class tuinWebServer : public AsyncWebServer {
         } else {
             if (m_lamp->isManualOverride()) {
                 description = "UIT - manueel";
+            } else {
+                description = "UIT";
             }
         }
         request->send(200, "text/plain", description);

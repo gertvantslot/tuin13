@@ -21,6 +21,7 @@
 
 const char* ssid = __WIFI_SSID__;
 const char* password = __WIFI_PASW__;
+const char* hostname = __WIFI_HOSTNAME__;
 
 Timezone CET;
 tuinWebServer server(80);
@@ -81,6 +82,8 @@ void setup() {
     // WiFi connection
     Serial.println("==========================");
     Serial.println("Starting WiFi connection");
+    
+    WiFi.hostname(hostname);
     WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED) {
