@@ -1,0 +1,2 @@
+Ochtend: 06:30 -> Sunrise
+Avond: Sunset + 00:05 -> 22:30

@@ -23,6 +23,10 @@ void tuinWebServer::start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp, Dusk2D
     on("/api/time/sunrise.txt", [this](AsyncWebServerRequest *request){ this->onSunrise(request); });
     on("/api/time/sunset.txt", [this](AsyncWebServerRequest *request){ this->onSunset(request); });
 
+    on("/api/lamp/burning.txt", [this](AsyncWebServerRequest *request){ this->onLampBurning(request); });
+    on("/api/lamp/status.txt", [this](AsyncWebServerRequest *request){ this->onLampStatus(request); });
+    on("/api/lamp/schedule.txt", [this](AsyncWebServerRequest *request){ this->onLampSchedule(request); });
+
     serveStatic("/", fs, "/www/")
         .setDefaultFile("index.html");    
     begin();

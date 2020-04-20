@@ -15,7 +15,8 @@ private:
     Schedule *m_schedule;
     button *m_button;
 
-    uint8_t pin_led;
+    uint8_t pin_active;
+    uint8_t pin_manual;
     uint8_t pin_relay;
 
     bool m_autoActive;
@@ -36,11 +37,14 @@ public:
     void setPosition(Dusk2Dawn *sun);
     void setTimezone(Timezone *time);
     void setSchedule(Schedule &first);
+    Schedule *getSchedule();
     void setButton(button *btn);
 
-    void pins(uint8_t led, uint8_t relay);
+    void pins(uint8_t active, uint8_t manual, uint8_t relay);
 
     bool isActive();
+    bool isManualOverride();
+    bool isForceOn();
 
     void payload();
 

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xml:space="preserve" width="1in" gorn="0" id="Layer_1" x="0px" y="0px" height="1.4in" viewBox="0 0 71.99998 100.79976" version="1.1" enable-background="new 0 0 65 130" sodipodi:docname="ESP8266 NodeMCU LoLin module_4ac350af3ac2fef357e535cbb2c0db8c_1_schematic.svg" inkscape:version="0.92.3 (2405546, 2018-03-11)"><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="640" inkscape:window-height="480" id="namedview94" showgrid="false" inkscape:current-layer="breadboard" />
+    <desc id="desc2">
+        <referenceFile>NodeMCUSchema.svg</referenceFile>
+    </desc>
+    <metadata id="metadata133">
+        <rdf:RDF>
+            <cc:Work rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+                <dc:title />
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <defs id="defs131" />
+    <g gorn="0.3" id="schematic" >
+        <text gorn="0.3.0" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text3" font-size="3.5" x="58.655766" y="15.37371">D0</text>
+
+        <text gorn="0.3.1" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text5" font-size="3.5" x="58.655766" y="22.589088">D1</text>
+
+        <text gorn="0.3.2" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text7" font-size="3.5" x="58.655766" y="29.790756">D2</text>
+
+        <text gorn="0.3.3" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text9" font-size="3.5" x="58.655766" y="36.973705">D3</text>
+
+        <text gorn="0.3.4" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text11" font-size="3.5" x="58.655766" y="44.179684">D4</text>
+
+        <text gorn="0.3.5" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text13" font-size="3.5" x="19.220316" y="91.791985">3V3</text>
+
+        <text gorn="0.3.6" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text17" font-size="3.5" x="58.655766" y="51.355755">D5</text>
+
+        <text gorn="0.3.7" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text19" font-size="3.5" x="58.655766" y="58.571991">D6</text>
+
+        <text gorn="0.3.8" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text21" font-size="3.5" x="58.655766" y="65.772835">D7</text>
+
+        <text gorn="0.3.9" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text23" font-size="3.5" x="58.655766" y="72.973694">D8</text>
+
+        <text gorn="0.3.10" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text25" font-size="3.5" x="58.999565" y="80.172836">RX</text>
+
+        <text gorn="0.3.11" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text27" font-size="3.5" x="59.247566" y="87.335869">TX</text>
+
+        <text gorn="0.3.12" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text33" font-size="3.5" x="33.30492" y="11.825704">VIN</text>
+
+        <text gorn="0.3.13" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text35" font-size="3.5" x="47.234364" y="91.791985">GND</text>
+
+        <text gorn="0.3.14" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text37" font-size="3.5" x="9.0866461" y="80.173691">RST</text>
+
+        <text gorn="0.3.15" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text39" font-size="3.5" x="9.0866461" y="72.97113">EN</text>
+
+        <text gorn="0.3.16" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text45" font-size="3.5" x="9.0866461" y="65.773697">SK</text>
+
+        <text gorn="0.3.17" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text47" font-size="3.5" x="9.0866461" y="58.5737">S0</text>
+
+        <text gorn="0.3.18" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text49" font-size="3.5" x="9.0866461" y="51.373699">SC</text>
+
+        <text gorn="0.3.19" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text51" font-size="3.5" x="9.0866461" y="44.173702">S1</text>
+
+        <text gorn="0.3.20" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text53" font-size="3.5" x="9.0866461" y="36.973705">S2</text>
+
+        <text gorn="0.3.21" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text55" font-size="3.5" x="9.0866461" y="29.773706">S3</text>
+
+        <text gorn="0.3.22" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text57" font-size="3.5" x="9.0866461" y="22.573708">VU</text>
+
+        <text gorn="0.3.23" style="font-size:3.5px;font-family:DroidSans;fill:#555555;fill-opacity:1" id="text61" font-size="3.5" x="9.0875463" y="15.37371">A0</text>
+
+        <rect width="56.679981" gorn="0.3.24" style="fill:none;stroke:#231f20;stroke-width:0.92024976;stroke-miterlimit:10;stroke-dasharray:none" id="rect63" stroke-miterlimit="10" x="7.6599984" y="7.6598954" height="85.479973" />
+        <line gorn="0.3.25" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector42pin" stroke-miterlimit="10" x1="0.00099580456" y2="14.395396" x2="7.1993184" y1="14.380393" />
+        <rect width="0.0165461" gorn="0.3.26" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector42terminal" x="0.00013848476" y="14.396151" height="0.00203412" />
+        <line gorn="0.3.27" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.57599986;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector41pin" stroke-miterlimit="10" x1="50.34399" y2="100.79874" x2="50.327984" y1="93.527733" />
+        <rect width="0.0165464" gorn="0.3.28" style="fill:none;stroke:none;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none" id="connector41terminal" x="50.399986" y="100.79779" height="0.0020363999" />
+        <line gorn="0.3.29" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector40pin" stroke-miterlimit="10" x1="0.00099580456" y2="21.614233" x2="7.1993184" y1="21.598234" />
+        <rect width="0.0165464" gorn="0.3.30" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector40terminal" x="6.9462571e-005" y="21.614092" height="0.0020363999" />
+        <line gorn="0.3.31" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector39pin" stroke-miterlimit="10" x1="0.00099580456" y2="28.798395" x2="7.1993184" y1="28.782394" />
+        <rect width="0.0165464" gorn="0.3.32" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector39terminal" x="6.9462571e-005" y="28.797855" height="0.0020363999" />
+        <line gorn="0.3.33" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector38pin" stroke-miterlimit="10" x1="0.00099580456" y2="35.998791" x2="7.1993184" y1="35.982792" />
+        <rect width="0.0165464" gorn="0.3.34" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector38terminal" x="6.9462571e-005" y="35.997852" height="0.0020363999" />
+        <line gorn="0.3.35" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector37pin" stroke-miterlimit="10" x1="0.00099580456" y2="43.198689" x2="7.1993184" y1="43.183689" />
+        <rect width="0.0165461" gorn="0.3.36" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector37terminal" x="0.00013848476" y="43.197849" height="0.00203412" />
+        <line gorn="0.3.37" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector36pin" stroke-miterlimit="10" x1="0.00099580456" y2="50.399582" x2="7.1993184" y1="50.383583" />
+        <rect width="0.0165464" gorn="0.3.38" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector36terminal" x="6.9462571e-005" y="50.397846" height="0.0020363999" />
+        <line gorn="0.3.39" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector35pin" stroke-miterlimit="10" x1="0.00099580456" y2="57.597275" x2="7.1993184" y1="57.583275" />
+        <rect width="0.0165458" gorn="0.3.40" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector35terminal" x="0.00020649366" y="57.596142" height="0.0020318499" />
+        <line gorn="0.3.41" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector34pin" stroke-miterlimit="10" x1="0.00099580456" y2="64.800873" x2="7.1993184" y1="64.783882" />
+        <rect width="0.0165467" gorn="0.3.42" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector34terminal" x="5e-007" y="64.797844" height="0.00203867" />
+        <line gorn="0.3.43" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.57599986;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector33pin" stroke-miterlimit="10" x1="50.342983" y2="100.79879" x2="50.327984" y1="93.527802" />
+        <rect width="0.0165461" gorn="0.3.44" style="fill:none;stroke:none;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none" id="connector33terminal" x="50.399986" y="100.79779" height="0.00203412" />
+        <line gorn="0.3.45" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.57599986;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector19pin" stroke-miterlimit="10" x1="21.531488" y2="100.7987" x2="21.527994" y1="93.527115" />
+        <rect width="0.0041320221" gorn="0.3.46" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector19terminal" x="21.599995" y="100.79784" height="0.0020320136" />
+        <line gorn="0.3.47" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector18pin" stroke-miterlimit="10" x1="0.00099580456" y2="71.998566" x2="7.1993184" y1="71.983566" />
+        <rect width="0.0165461" gorn="0.3.48" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector18terminal" x="0.00013848476" y="71.99614" height="0.00203412" />
+        <line gorn="0.3.49" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71641225;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector17pin" stroke-miterlimit="10" x1="0.00099580456" y2="79.201668" x2="7.1993184" y1="79.184662" />
+        <rect width="0.0165467" gorn="0.3.50" style="fill:#555555;fill-opacity:1;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector17terminal" x="5e-007" y="79.197838" height="0.00203867" />
+        <line gorn="0.3.51" style="fill:none;stroke:#555555;stroke-width:0.57599986;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector16pin" stroke-miterlimit="10" x1="50.327984" y2="93.528984" x2="50.34399" y1="100.79874" />
+        <rect width="0.0165464" gorn="0.3.52" style="fill:none;stroke:none;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none" id="connector16terminal" x="50.399986" y="100.79779" height="0.0020363999" />
+        <line gorn="0.3.53" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0.71983898;stroke-miterlimit:8.909091;stroke-dasharray:none;stroke-opacity:1" id="connector15pin" stroke-miterlimit="10" x1="36.017082" y2="7.1987205" x2="35.999908" y1="0.00040732554" />
+        <rect width="0.0165467" gorn="0.3.54" style="fill:#555555;fill-opacity:1;stroke:#555555;stroke-width:0;stroke-opacity:1" id="connector15terminal" x="35.999992" y="-0.0021466026" height="0.00203867" />
+        <line gorn="0.3.55" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector0pin" stroke-miterlimit="10" x1="64.801994" y2="14.432861" x2="71.999329" y1="14.416862" />
+        <rect width="0.0165444" gorn="0.3.56" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector0terminal" x="72.000084" y="14.433112" height="0.0020363999" />
+        <line gorn="0.3.57" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector1pin" stroke-miterlimit="10" x1="64.801994" y2="21.651165" x2="72.00032" y1="21.635164" />
+        <rect width="0.0165464" gorn="0.3.58" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector1terminal" x="72.001083" y="21.597851" height="0.0020363999" />
+        <line gorn="0.3.59" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector2pin" stroke-miterlimit="10" x1="64.801994" y2="28.907293" x2="72.00032" y1="28.891289" />
+        <rect width="0.0165464" gorn="0.3.60" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector2terminal" x="72.001083" y="28.79785" height="0.0020363999" />
+        <line gorn="0.3.61" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector3pin" stroke-miterlimit="10" x1="64.801994" y2="36.035149" x2="71.999329" y1="36.020142" />
+        <rect width="0.0165441" gorn="0.3.62" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector3terminal" x="72.000084" y="35.997849" height="0.00203412" />
+        <line gorn="0.3.63" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector4pin" stroke-miterlimit="10" x1="64.801994" y2="43.2355" x2="72.00032" y1="43.220501" />
+        <rect width="0.0165461" gorn="0.3.64" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector4terminal" x="72.001083" y="43.197849" height="0.00203412" />
+        <line gorn="0.3.65" style="fill:none;stroke:#555555;stroke-width:0.57599986;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector5pin" stroke-miterlimit="10" x1="21.531992" y2="100.7987" x2="21.527994" y1="93.527115" />
+        <rect width="0.0041321716" gorn="0.3.66" style="fill:none;stroke:#555555;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector5terminal" x="21.599995" y="100.79783" height="0.0020365638" />
+        <line gorn="0.3.67" style="fill:none;stroke:#555555;stroke-width:0.57599986;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector6pin" stroke-miterlimit="10" x1="50.343983" y2="100.79874" x2="50.327984" y1="93.528732" />
+        <rect width="0.0165444" gorn="0.3.68" style="fill:none;stroke:none;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none" id="connector6terminal" x="50.399986" y="100.79779" height="0.0020363999" />
+        <line gorn="0.3.69" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector7pin" stroke-miterlimit="10" x1="64.801994" y2="50.436356" x2="72.00032" y1="50.420357" />
+        <rect width="0.0165464" gorn="0.3.70" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector7terminal" x="72.001083" y="50.397842" height="0.0020363999" />
+        <line gorn="0.3.71" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector8pin" stroke-miterlimit="10" x1="64.801994" y2="57.634007" x2="72.00032" y1="57.620007" />
+        <rect width="0.0165458" gorn="0.3.72" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector8terminal" x="72.000984" y="57.63311" height="0.0020318499" />
+        <line gorn="0.3.73" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector9pin" stroke-miterlimit="10" x1="64.801994" y2="64.836067" x2="71.999329" y1="64.822067" />
+        <rect width="0.0165438" gorn="0.3.74" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector9terminal" x="71.999985" y="64.797844" height="0.0020318499" />
+        <line gorn="0.3.75" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector10pin" stroke-miterlimit="10" x1="64.801994" y2="72.036217" x2="72.00032" y1="72.019218" />
+        <rect width="0.0165467" gorn="0.3.76" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector10terminal" x="72.001183" y="72.033096" height="0.00203867" />
+        <line gorn="0.3.77" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector11pin" stroke-miterlimit="10" x1="64.801994" y2="79.236778" x2="72.00032" y1="79.222778" />
+        <rect width="0.0165458" gorn="0.3.78" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector11terminal" x="72.000984" y="79.197845" height="0.0020318499" />
+        <line gorn="0.3.79" style="fill:none;stroke:#555555;stroke-width:0.71641034;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector12pin" stroke-miterlimit="10" x1="64.801994" y2="86.401665" x2="71.999329" y1="86.384674" />
+        <rect width="0.0165447" gorn="0.3.80" style="fill:none;stroke:none;stroke-width:0.71999985;stroke-miterlimit:7;stroke-dasharray:none;stroke-opacity:1" id="connector12terminal" x="72.000183" y="86.397835" height="0.00203867" />
+        <line gorn="0.3.81" style="fill:none;stroke:#555555;stroke-width:0.71984529;stroke-miterlimit:8.909091;stroke-dasharray:none;stroke-opacity:1" id="connector13pin" stroke-miterlimit="10" x1="50.416069" y2="100.79874" x2="50.39991" y1="93.600327" />
+        <rect width="0.0165464" gorn="0.3.82" style="fill:none;stroke:none;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none" id="connector13terminal" x="50.399986" y="100.79779" height="0.0020363999" />
+        <line gorn="0.3.83" style="fill:none;stroke:#555555;stroke-width:0.71995777;stroke-miterlimit:8.909091;stroke-dasharray:none;stroke-opacity:1" id="connector14pin" stroke-miterlimit="10" x1="21.604265" y2="100.7987" x2="21.599974" y1="93.599121" />
+        <rect width="0.0041322466" gorn="0.3.84" style="fill:none;stroke:#555555;stroke-width:0;stroke-miterlimit:8.36363602;stroke-dasharray:none;stroke-opacity:1" id="connector14terminal" x="21.599995" y="100.79783" height="0.0020388342" />
+        <text gorn="0.3.85" style="font-size:4.49999857px;font-family:DroidSans;fill:#000000;fill-opacity:1;stroke-width:1" id="text3-9" font-size="3.5" x="25.633295" y="34.515938">NodeMCU</text>
+
+        <text gorn="0.3.86" style="font-size:4.49999857px;font-family:DroidSans;fill:#000000;fill-opacity:1;stroke-width:1" id="text3-9-0" font-size="3.5" x="27.275749" y="28.755941">ESP8266</text>
+
+    </g>
+</svg>

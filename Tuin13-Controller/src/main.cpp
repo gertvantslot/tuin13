@@ -27,8 +27,8 @@ tuinWebServer server(80);
 
 Dusk2Dawn sun(51.313363, 4.4954359, 0.0);
 tuinLamp lamp;
-Schedule lampMorning;
-Schedule lampEvening;
+Schedule lampMorning("Ochtend");
+Schedule lampEvening("Avond");
 
 button lampButton(PIN_TUIN_LAMP_BUTTON);
 
@@ -53,6 +53,18 @@ void initSun() {
 }
 
 void setup() {
+    // Set all connected hardware to a save position
+    pinMode(PIN_TUIN_LAMP_ACTIVE, OUTPUT);
+    pinMode(PIN_TUIN_LAMP_MANUAL, OUTPUT);
+    pinMode(PIN_TUIN_LAMP_RELAY, OUTPUT);
+    pinMode(PIN_TUIN_LAMP_BUTTON, OUTPUT);
+
+    digitalWrite(PIN_TUIN_LAMP_ACTIVE, LOW);
+    digitalWrite(PIN_TUIN_LAMP_MANUAL, LOW);
+    digitalWrite(PIN_TUIN_LAMP_RELAY, LOW);
+    digitalWrite(PIN_TUIN_LAMP_BUTTON, LOW);
+
+
     // Initialize and wait for serial
     Serial.begin(115200);
     while (!Serial) {
@@ -141,7 +153,7 @@ void setup() {
     Serial.println("Hardware");
     lampButton.begin();
     lamp.setButton(&lampButton);
-    lamp.pins(PIN_TUIN_LAMP_LED, PIN_TUIN_LAMP_RELAY);
+    lamp.pins(PIN_TUIN_LAMP_ACTIVE, PIN_TUIN_LAMP_MANUAL, PIN_TUIN_LAMP_RELAY);
 
     Serial.println();
     Serial.println();

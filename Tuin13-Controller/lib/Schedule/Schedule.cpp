@@ -6,6 +6,29 @@
 #define debugln(args...) \
     if (m_debug) Serial.println(args)
 
+size_t printDoubleDigit(int value, char *buffer) {
+    size_t index = 0;
+    if (value < 10) {
+        *(buffer + 0) = '0';
+        index++;
+    }
+    itoa(value, buffer + index, 10);
+    return 2;
+}
+
+size_t printTime(int hour, int minutes, char *buffer) {
+    printDoubleDigit(hour, buffer);
+    *(buffer + 2) = ':';
+    printDoubleDigit(minutes, buffer + 3);
+    return 5;
+}
+
+size_t printTime(time_t t, char *buffer) {
+    tmElements_t tm;
+    breakTime(t, tm);
+    return printTime(tm.Hour, tm.Minute, buffer);
+}
+
 
 time_t ScheduleTime::whenSunrise(Dusk2Dawn &sun, time_t t) {
     // Get reference time of current sunrise
@@ -38,6 +61,35 @@ time_t ScheduleTime::whenSunset(Dusk2Dawn &sun, time_t t) {
 ScheduleTime::ScheduleTime(uint8_t mode, int hours, int minutes) {
     m_mode = mode;
     m_offset = hours * SECS_PER_HOUR + minutes * SECS_PER_MIN;
+
+    // Set description
+    size_t index = 0;
+    switch (mode)
+    {
+    case TIME_MODE_MIDNIGHT:
+        printTime(hours, minutes, m_description);
+        break;
+    case TIME_MODE_SUNRISE:
+        strcpy(m_description, "Sunrise");
+        index += 7;
+        if (hours > 0 || minutes > 0) {
+            strcpy(m_description + index, " + ");
+            index += 3;
+            printTime(hours, minutes, m_description + index);
+        }     
+        break;
+    case TIME_MODE_SUNSET:
+        strcpy(m_description, "Sunset");
+        index += 6;
+        if (hours > 0 || minutes > 0) {
+            strcpy(m_description + index, " + ");
+            index += 3;
+            printTime(hours, minutes, m_description + index);
+        }     
+        break;
+    default:
+        break;
+    }
 }
 
 time_t ScheduleTime::when(Dusk2Dawn &sun, time_t t) {
@@ -76,7 +128,8 @@ void ScheduleTime::printStatus() {
     Serial.println();
 }
 
-Schedule::Schedule(/* args */) {
+Schedule::Schedule(const char * name) {
+    m_name = name;
 }
 
 Schedule::~Schedule() {
@@ -121,8 +174,6 @@ bool Schedule::isActive(Dusk2Dawn &sun, time_t t) {
 }
 
 void Schedule::printStatus() {
-    Serial.print("Start : ");
-    m_start.printStatus();
-    Serial.print("Stop  : ");
-    m_stop.printStatus();
+    char buffer[50];
+    Serial.println(description(buffer, sizeof(buffer)));
 }

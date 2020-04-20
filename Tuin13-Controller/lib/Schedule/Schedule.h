@@ -18,16 +18,24 @@ class ScheduleTime {
     time_t whenSunset(Dusk2Dawn &sun, time_t t);
     bool m_debug = false;
 
+    char m_description[16];
+
    public:
     ScheduleTime(uint8_t mode, int hours, int minutes);
     time_t when(Dusk2Dawn &sun, time_t t);
     void printStatus();
+    
+    char *description(char * buffer, size_t len) { 
+        strncpy(buffer, m_description, len);
+        return buffer; 
+    }
 };
 
 class Schedule {
    private:
     /* data */
 
+    const char * m_name;
     ScheduleTime m_start = ScheduleTime(TIME_MODE_MIDNIGHT, 7, 30);
     ScheduleTime m_stop = ScheduleTime(TIME_MODE_SUNRISE, 0, 0);
 
@@ -36,14 +44,27 @@ class Schedule {
     bool m_debug = false;
 
    public:
-    Schedule(/* args */);
+    Schedule(const char * name);
     ~Schedule();
 
     void setStart(int mode, int hours, int minutes);
     void setStop(int mode, int hours, int minutes);
     void link(Schedule &next);
+    Schedule *next() { return m_next; }
     bool isActive(Dusk2Dawn &sun, time_t t);
     
     void printStatus();
+    char * description(char * buffer, size_t len) {
+        strncpy(buffer, m_name, len);
+        strlcat(buffer, ": ", len);
+        
+        size_t index = strnlen(buffer, len);
+        m_start.description(buffer + index, len - index);
+        strlcat(buffer, " -> ", len);
+
+        index = strnlen(buffer, len);
+        m_stop.description(buffer + index, len - index);
+        return buffer;
+    }
 };
 

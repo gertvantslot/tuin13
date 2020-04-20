@@ -83,6 +83,46 @@ class tuinWebServer : public AsyncWebServer {
         request->send(200, "text/plain", sunSet());
     }
 
+    void onLampSchedule(AsyncWebServerRequest *request) {
+        char buffer[256];
+        *buffer = 0; // Set empty/zero string
+        Schedule *s = m_lamp->getSchedule();
+        bool first = true;
+        while(s) {
+            if (!first) {
+                strlcat(buffer, "\r\n", sizeof(buffer));
+            }
+            size_t index = strnlen(buffer, sizeof(buffer));
+            s->description(buffer + index, sizeof(buffer) - index);
+            s = s->next();
+        }
+        request->send(200, "text/plain", buffer);
+    }
+
+    void onLampBurning(AsyncWebServerRequest *request) {
+        request->send(200, "text/plain", m_lamp->isActive() ? "1" : "0");
+    }
+
+    void onLampStatus(AsyncWebServerRequest *request) {
+        char * description;
+        if (m_lamp->isActive()) {
+            if (m_lamp->isForceOn()) {
+                description = "AAN - Blijft aan";
+            } else {
+                if (m_lamp->isManualOverride()) {
+                    description = "AAN - Manueel";
+                } else {
+                    description = "AAN";
+                }
+            }
+        } else {
+            if (m_lamp->isManualOverride()) {
+                description = "UIT - manueel";
+            }
+        }
+        request->send(200, "text/plain", description);
+    }
+
    public:
     tuinWebServer(uint16_t port);
     void start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp, Dusk2Dawn *sun);

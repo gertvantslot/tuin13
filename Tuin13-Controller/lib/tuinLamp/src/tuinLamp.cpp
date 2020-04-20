@@ -32,33 +32,39 @@ void tuinLamp::setSchedule(Schedule &first) {
     m_schedule = &first;
 }
 
+Schedule *tuinLamp::getSchedule() {
+    return m_schedule;
+}
+
 void tuinLamp::setButton(button *btn) {
     m_button = btn;
 }
 
 bool tuinLamp::isActive() {
     if (m_manual_force_on) {
-        Serial.print(m_manual_override_duration);
         if (m_manual_override_start + m_manual_override_duration > m_time->now()) {
-            Serial.print("*");
             return true;
         } else {
             m_manual_force_on = false;
         }
     }
     if (m_manual_override) {
-        Serial.print(".");
         return !m_autoActive;
     } else {
         return m_autoActive;
     }
 }
 
-void tuinLamp::pins(uint8_t led, uint8_t relay) {
-    pin_led = led;
+bool tuinLamp::isManualOverride() { return m_manual_override; }
+bool tuinLamp::isForceOn() { return m_manual_force_on; }
+
+void tuinLamp::pins(uint8_t active, uint8_t manual, uint8_t relay) {
+    pin_active = active;
+    pin_manual = manual;
     pin_relay = relay;
 
-    pinMode(pin_led, OUTPUT);
+    pinMode(pin_active, OUTPUT);
+    pinMode(pin_manual, OUTPUT);
     pinMode(pin_relay, OUTPUT);
 }
 
@@ -90,13 +96,13 @@ void tuinLamp::payload() {
     debug("tuinLamp active: ");
     debugln(isActive());
 
-    if (isActive()) {
-        Serial.print("+");
+    // Set output
+    digitalWrite(pin_active, isActive());
+    if (m_manual_force_on) {
+        digitalWrite(pin_manual, (millis() / 250) % 2);
     } else {
-        Serial.print("-");
+        digitalWrite(pin_manual, m_manual_override);
     }
 
-    // Set output
-    digitalWrite(pin_led, !isActive());
     digitalWrite(pin_relay, isActive());
 }
