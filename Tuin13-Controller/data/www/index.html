@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <!-- Feather icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <title>Tuin-13</title>
 </head>
 
 <body>
@@ -32,11 +34,8 @@
                         <p class="card-text">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                                <label class="custom-control-label" for="customSwitch1">Lamp</label>
-                            </div>
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="customSwitch2">
-                                <label class="custom-control-label" for="customSwitch2">Water</label>
+                                <label class="custom-control-label" for="customSwitch1">Lamp</label><br />
+                                <i class="lead"><span class="second" data-src="api/lamp/status.txt">AAN/UIT</span></i>
                             </div>
                         </p>
                     </div>
@@ -54,14 +53,31 @@
                     Lamp
                 </div>
                 <div class="card-body">
+                    <span class="load" data-src="api/lamp/schedule.txt">---</span><br />
                     <p class="card-text">Ochtend: 07:00 -> Zon-op</p>
                     <p class="card-text">Avond: Zon-onder -> 22:00</p>
-                    <p class="card-text">Manueel: -> 03:00</p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary">Aanpassen</a>
+                    <div class="btn-toolbar">
+                        <div class="btn-group mr-2">
+                            <a href="#" class="btn btn-outline-success ">Aan</a>
+                            <a href="#" class="btn btn-outline-danger">Uit</a>
+                        </div>
+                        <div class="input-group mr-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" id="btnGroupAddon"><i data-feather="sun"></i> &nbsp; Aan tot</div>
+                            </div>
+                            <input type="time" class="form-control" placeholder="Tijd"
+                                aria-label="Input group example" aria-describedby="btnGroupAddon">
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-outline-secondary"><i data-feather="check"></i></a>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary">Schema aanpassen</a>
+                    </div>
                 </div>
             </div>
+            <!--
             <div class="card border-success">
                 <div class="card-header lead">
                     Water
@@ -74,6 +90,7 @@
                     <a href="#" class="btn btn-success">Aanpassen</a>
                 </div>
             </div>
+            -->
         </div>
 
         <div class="row mt-4">
@@ -86,7 +103,7 @@
                     Tijd
                 </div>
                 <div class="card-body">
-                    <p class="card-text"><span class="second" data-src="/api/time/current.txt"></span></p>
+                    <p class="card-text"><span class="second" data-src="api/time/current.txt"></span></p>
                     <p class="card-text">Zon op: <span class="load" data-src="api/time/sunrise.txt">---</span></p>
                     <p class="card-text">Zon onder: <span class="load" data-src="api/time/sunset.txt">---</span></p>
                 </div>
@@ -118,9 +135,9 @@
                     <dl class="card-text">
                         <dt>IP address</dt>
                         <dd>
-                            <span class="load" data-src="api/network/ipaddress.txt">---</span><br/>
+                            <span class="load" data-src="api/network/ipaddress.txt">---</span><br />
                             <span class="load" data-src="api/network/ipaddressv6.txt">0:0</span>
-                         </dd>
+                        </dd>
 
                         <dt>SSID</dt>
                         <dd class="load" data-src="api/network/ssid.txt">---</dd>
@@ -136,7 +153,7 @@
             <hr />
             Tuin 13 | By GvS
         </div>
-    
+
     </div>
 
 
@@ -167,21 +184,24 @@
                     });
             });
 
-            window.setInterval(function() {
+            window.setInterval(function () {
                 $(".second").each(function () {
-                var el = $(this);
-                var src = $(this).data("src");
-                $.ajax({
-                    url: src
-                })
-                    .done(function (data) {
-                        el.text(data);
-                    });
-            });
+                    var el = $(this);
+                    var src = $(this).data("src");
+                    $.ajax({
+                        url: src
+                    })
+                        .done(function (data) {
+                            el.text(data);
+                        });
+                });
             }, 1000);
         });
     </script>
 
+    <script>
+        feather.replace()
+    </script>
 </body>
 
 </html>
