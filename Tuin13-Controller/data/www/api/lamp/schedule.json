@@ -1,0 +1,38 @@
+{
+    "schedule": [
+        {
+            "name": "ochtend",
+            "start": {
+                "mode": 0,
+                "offset" : {
+                    "hour": 6,
+                    "minute": 30
+                }
+            },
+            "stop": {
+                "mode": 2,
+                "offset" : {
+                    "hour": 0,
+                    "minute": 0
+                }
+            }
+        },
+        {
+            "name": "avond",
+            "start": {
+                "mode": 1,
+                "offset" : {
+                    "hour": 0,
+                    "minute": 0
+                }
+            },
+            "stop": {
+                "mode": 0,
+                "offset" : {
+                    "hour": 23,
+                    "minute": 0
+                }
+            }
+        }
+    ]
+}

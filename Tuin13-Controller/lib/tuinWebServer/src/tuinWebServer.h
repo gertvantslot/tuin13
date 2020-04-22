@@ -3,10 +3,10 @@
 #include <Arduino.h>
 
 #ifdef ESP32
+#include <AsyncTCP.h>
 #include <FS.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
-#include <AsyncTCP.h>
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
@@ -22,7 +22,7 @@ class tuinWebServer : public AsyncWebServer {
     /* data */
     Timezone *m_timezone;
     time_t m_startTime;
-    
+
     Dusk2Dawn *m_sun;
     tuinLamp *m_lamp;
 
@@ -37,11 +37,11 @@ class tuinWebServer : public AsyncWebServer {
     }
 
     void onIpAddressV6(AsyncWebServerRequest *request) {
-        #ifdef ESP32
+#ifdef ESP32
         request->send(200, "text/plain", WiFi.localIPv6().toString());
-        #else
+#else
         request->send(200, "text/plain", "");
-        #endif
+#endif
     }
 
     void onSSID(AsyncWebServerRequest *request) {
@@ -85,10 +85,10 @@ class tuinWebServer : public AsyncWebServer {
 
     void onLampSchedule(AsyncWebServerRequest *request) {
         char buffer[256];
-        *buffer = 0; // Set empty/zero string
+        *buffer = 0;  // Set empty/zero string
         Schedule *s = m_lamp->getSchedule();
         bool first = true;
-        while(s) {
+        while (s) {
             if (!first) {
                 strlcat(buffer, "\r\n", sizeof(buffer));
             }
@@ -99,12 +99,20 @@ class tuinWebServer : public AsyncWebServer {
         request->send(200, "text/plain", buffer);
     }
 
+    void onLampScheduleJson(AsyncWebServerRequest *request) {
+        AsyncResponseStream *response = request->beginResponseStream("application/json");
+        response->print("{ \"schedule\": ");
+        m_lamp->getSchedule()->jsonAll(*response);
+        response->print(" }");
+        request->send(response);
+    }
+
     void onLampBurning(AsyncWebServerRequest *request) {
         request->send(200, "text/plain", m_lamp->isActive() ? "1" : "0");
     }
 
     void onLampStatus(AsyncWebServerRequest *request) {
-        const char * description;
+        const char *description;
         if (m_lamp->isActive()) {
             if (m_lamp->isForceOn()) {
                 description = "AAN - Blijft aan";
@@ -125,9 +133,32 @@ class tuinWebServer : public AsyncWebServer {
         request->send(200, "text/plain", description);
     }
 
+    void onLampStatusJson(AsyncWebServerRequest *request) {
+        AsyncResponseStream *response = request->beginResponseStream("application/json");
+        response->print("{ \"status\": ");
+        response->print(m_lamp->isActive() ? 1 : 0);
+        response->print(", \"manueel\": ");
+        response->print(m_lamp->isForceOn() || m_lamp->isManualOverride() ? 1 : 0);
+        response->print(", \"tot\" : \"");
+        if (m_lamp->isManualOverride()) {
+            response->print(m_lamp->overrideOnEnd());
+        }
+        response->print("\" }");
+        request->send(response);
+    }
+
+    void onLampOn(AsyncWebServerRequest *request) {
+        m_lamp->manualOn();
+        onLampStatus(request);
+    }
+
+    void onLampOff(AsyncWebServerRequest *request) {
+        m_lamp->manualOff();
+        onLampStatus(request);
+    }
+
    public:
     tuinWebServer(uint16_t port);
-    void start(Timezone *timezone, fs::FS& fs, tuinLamp *lamp, Dusk2Dawn *sun);
+    void start(Timezone *timezone, fs::FS &fs, tuinLamp *lamp, Dusk2Dawn *sun);
     ~tuinWebServer();
 };
-

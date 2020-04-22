@@ -24,7 +24,7 @@ private:
     bool m_manual_force_on;
 
     time_t m_manual_override_duration = 4 * SECS_PER_HOUR; // Max 4 uur manual override
-    time_t m_manual_override_start;
+    time_t m_manual_override_end;
 
     bool m_debug = false;
 
@@ -45,6 +45,10 @@ public:
     bool isActive();
     bool isManualOverride();
     bool isForceOn();
+    String overrideOnEnd() { return isForceOn() ? m_time->dateTime(m_manual_override_end) : String(""); }
+
+    void manualOn();
+    void manualOff();
 
     void payload();
 

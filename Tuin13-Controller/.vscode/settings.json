@@ -27,5 +27,8 @@
         "algorithm": "cpp",
         "stdexcept": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "editor.fontFamily": "Fira Code, Hack, Consolas, 'Courier New', monospace",
+    "editor.fontSize": 15,
+    "editor.fontLigatures": true
 }

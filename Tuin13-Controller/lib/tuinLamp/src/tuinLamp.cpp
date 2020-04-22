@@ -42,7 +42,7 @@ void tuinLamp::setButton(button *btn) {
 
 bool tuinLamp::isActive() {
     if (m_manual_force_on) {
-        if (m_manual_override_start + m_manual_override_duration > m_time->now()) {
+        if (m_manual_override_end > m_time->now()) {
             return true;
         } else {
             m_manual_force_on = false;
@@ -68,6 +68,31 @@ void tuinLamp::pins(uint8_t active, uint8_t manual, uint8_t relay) {
     pinMode(pin_relay, OUTPUT);
 }
 
+void tuinLamp::manualOn() {
+    if (m_autoActive) {
+        // Automatisch aan => disable alle overrides
+        m_manual_override = false;
+        m_manual_force_on = false;
+        return;
+    }
+    if (m_manual_force_on) {
+        // already on
+        return;
+    }
+    m_manual_override = true;
+}
+
+void tuinLamp::manualOff() {
+    if (m_manual_force_on) {
+        m_manual_force_on = false;
+    }
+    if (!m_autoActive) {
+        m_manual_override = false;
+        return;
+    }
+    m_manual_override = true;
+}
+
 void tuinLamp::payload() {
     // Test button
     if (m_button->isClicked()) {
@@ -77,7 +102,7 @@ void tuinLamp::payload() {
     if (m_button->isDoubleClicked()) {
         m_manual_override = false;
         m_manual_force_on = true;
-        m_manual_override_start = m_time->now();
+        m_manual_override_end = m_manual_override_duration + m_time->now();
     }
 
     if (m_button->isLongPress()) {

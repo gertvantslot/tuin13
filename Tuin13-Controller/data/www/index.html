@@ -13,10 +13,53 @@
     <!-- Feather icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     <title>Tuin-13</title>
+
+    <script>
+        var functions = {};
+        function reg(name, fn) {
+            functions[name] = fn;
+        }
+        function exec(name, content) {
+            functions[name](content);
+        }
+
+        String.prototype.lpad = function (padString, length) {
+            var str = this;
+            while (str.length < length)
+                str = padString + str;
+            return str;
+        }
+
+        function timing(id, data) {
+            var icon = ""
+            var offset = String(data.offset.hour).lpad("0", 2)
+                + ":"
+                + String(data.offset.minute).lpad("0", 2);
+            var html = "";
+            if (data.mode == 0) {
+                icon = "clock";
+                html = offset;
+            } else if (data.mode == 1) {
+                icon = "sunset";
+                if (data.offset.hour != 0 && data.offset.minute != 0) {
+                    html = " + " + offset;
+                }
+            } else if (data.mode == 2) {
+                icon = "sunrise";
+                if (data.offset.hour != 0 && data.offset.minute != 0) {
+                    html = " + " + offset;
+                }
+            }
+
+            html = "<i data-feather='" + icon + "'></i>&nbsp;" + html;
+            $(id).html(html);
+            feather.replace();
+        }
+    </script>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container">
         <div class="jumbotron">
             <h1 class="display-3">Tuin-13</h1>
             <hr>
@@ -32,10 +75,32 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                                <label class="custom-control-label" for="customSwitch1">Lamp</label><br />
-                                <i class="lead"><span class="second" data-src="api/lamp/status.txt">AAN/UIT</span></i>
+                            <div id="lamp" class="alert alert-primary">
+                                <div class="custom-control custom-switch">
+                                    <h3>Lamp</h3>
+                                    <input type="checkbox" class="custom-control-input" id="status_check">
+                                    <label class="custom-control-label" for="customSwitch1" id="status_label">
+                                        Aan | Uit
+                                    </label><br />
+                                    <i class="lead">
+                                        <span class="secondf" data-src="api/lamp/status.json"
+                                            data-action="fStatus"></span>
+                                        <script>
+                                            reg("fStatus", function (content) {
+                                                var label = content.status == 1 ? "Aan" : "Uit";
+                                                if (content.tot.length > 0) {
+                                                    label += " tot " + content.tot;
+                                                }
+                                                $("#status_label").text(label);
+                                                $("#status_check").prop("checked", content.status == 1);
+                                                $("#lamp").removeClass("alert-warning");
+                                                $("#lamp").removeClass("alert-primary");
+                                                $("#lamp").removeClass("alert-info");
+                                                $("#lamp").addClass(content.status == 1 ? "alert-warning" : "alert-info");
+                                            });
+                                        </script>
+                                    </i>
+                                </div>
                             </div>
                         </p>
                     </div>
@@ -50,25 +115,62 @@
         <div class="card-deck">
             <div class="card border-primary">
                 <div class="card-header lead">
-                    Lamp
+                    Schema
                 </div>
                 <div class="card-body">
-                    <span class="load" data-src="api/lamp/schedule.txt">---</span><br />
-                    <p class="card-text">Ochtend: 07:00 -> Zon-op</p>
-                    <p class="card-text">Avond: Zon-onder -> 22:00</p>
+                    <table class="table table-sm">
+                        <tr>
+                            <td id="s0_name">-?-</td>
+                            <td id="s0_start">00:00</td>
+                            <td><i data-feather="arrow-right"></i></td>
+                            <td id="s0_stop">Zon</td>
+                        </tr>
+                        <tr>
+                            <td id="s1_name">Avond</td>
+                            <td id="s1_start">Zon</td>
+                            <td><i data-feather="arrow-right"></i></td>
+                            <td id="s1_stop">23:59</td>
+                        </tr>
+                    </table>
+                    <div class="loadf" data-src="api/lamp/schedule.json" data-action="fSchedule"></div>
+                    <script>
+                        reg("fSchedule", function (content) {
+                            $("#s0_name").text(content.schedule[0].name);
+                            $("#s1_name").text(content.schedule[1].name);
+                            timing("#s0_start", content.schedule[0].start);
+                            timing("#s1_start", content.schedule[1].start);
+                            timing("#s0_stop", content.schedule[0].stop);
+                            timing("#s1_stop", content.schedule[1].stop);
+                        });
+                    </script>
                 </div>
                 <div class="card-footer">
                     <div class="btn-toolbar">
                         <div class="btn-group mr-2">
-                            <a href="#" class="btn btn-outline-success ">Aan</a>
-                            <a href="#" class="btn btn-outline-danger">Uit</a>
+                            <a href="#" class="btn btn-outline-success" onclick="lampOn()">Aan</a>
+                            <a href="#" class="btn btn-outline-danger" onclick="lampOff()">Uit</a>
+                            <script>
+                                function lampOn() {
+                                    $.ajax({
+                                        url: "api/lamp/on.txt"
+                                    });
+                                    return false;
+                                }
+                                function lampOff() {
+                                    $.ajax({
+                                        url: "api/lamp/off.txt"
+                                    });
+                                    return false;
+                                }
+                            </script>
                         </div>
                         <div class="input-group mr-2">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" id="btnGroupAddon"><i data-feather="sun"></i> &nbsp; Aan tot</div>
+                                <div class="input-group-text" id="btnGroupAddon"><i data-feather="sun"></i> &nbsp; Aan
+                                    tot</div>
                             </div>
-                            <input type="time" class="form-control" placeholder="Tijd"
-                                aria-label="Input group example" aria-describedby="btnGroupAddon">
+                            <input type="time" class="form-control" placeholder="Tijd" aria-label="Input group example"
+                                aria-describedby="btnGroupAddon">
                             <div class="input-group-append">
                                 <a href="#" class="btn btn-outline-secondary"><i data-feather="check"></i></a>
                             </div>
@@ -103,12 +205,12 @@
                     Tijd
                 </div>
                 <div class="card-body">
-                    <p class="card-text"><span class="second" data-src="api/time/current.txt"></span></p>
-                    <p class="card-text">Zon op: <span class="load" data-src="api/time/sunrise.txt">---</span></p>
-                    <p class="card-text">Zon onder: <span class="load" data-src="api/time/sunset.txt">---</span></p>
-                </div>
-                <div class="card-footer">
-                    &nbsp;
+                    <p class="card-text"><i data-feather="clock"></i> <span class="second"
+                            data-src="api/time/current.txt"></span></p>
+                    <p class="card-text"><i data-feather="sunrise"></i> <span class="load"
+                            data-src="api/time/sunrise.txt">---</span></p>
+                    <p class="card-text"><i data-feather="sunset"></i> <span class="load"
+                            data-src="api/time/sunset.txt">---</span></p>
                 </div>
             </div>
 
@@ -117,13 +219,8 @@
                     Afgelopen 24 uur
                 </div>
                 <div class="card-body">
-                    <p class="card-text">Water: 10min</p>
                     <p class="card-text">Lamp: 2 uur 4 min</p>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-success">Aanpassen</a>
-                </div>
-
             </div>
 
 
@@ -133,16 +230,16 @@
                 </div>
                 <div class="card-body">
                     <dl class="card-text">
-                        <dt>IP address</dt>
+                        <dt><i data-feather="wifi"></i> IP address</dt>
                         <dd>
                             <span class="load" data-src="api/network/ipaddress.txt">---</span><br />
                             <span class="load" data-src="api/network/ipaddressv6.txt">0:0</span>
                         </dd>
 
-                        <dt>SSID</dt>
+                        <dt><i data-feather="bar-chart"></i> SSID</dt>
                         <dd class="load" data-src="api/network/ssid.txt">---</dd>
 
-                        <dt>Actief sinds</dt>
+                        <dt><i data-feather="activity"></i> Actief sinds</dt>
                         <dd class="load" data-src="api/time/start.txt">---</dd>
                     </dl>
                 </div>
@@ -155,7 +252,6 @@
         </div>
 
     </div>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -178,10 +274,19 @@
                 var src = $(this).data("src");
                 $.ajax({
                     url: src
-                })
-                    .done(function (data) {
-                        el.text(data);
-                    });
+                }).done(function (data) {
+                    el.text(data);
+                });
+            });
+
+            $(".loadf").each(function () {
+                var el = $(this);
+                var src = $(this).data("src");
+                $.ajax({
+                    url: src
+                }).done(function (data) {
+                    exec($(el).data("action"), data);
+                });
             });
 
             window.setInterval(function () {
@@ -190,12 +295,24 @@
                     var src = $(this).data("src");
                     $.ajax({
                         url: src
-                    })
-                        .done(function (data) {
-                            el.text(data);
-                        });
+                    }).done(function (data) {
+                        el.text(data);
+                    });
                 });
             }, 1000);
+
+            window.setInterval(function () {
+                $(".secondf").each(function () {
+                    var el = $(this);
+                    var src = $(this).data("src");
+                    $.ajax({
+                        url: src
+                    }).done(function (data) {
+                        exec($(el).data("action"), data);
+                    });
+                });
+            }, 1000);
+
         });
     </script>
 
