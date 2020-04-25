@@ -1,23 +1,25 @@
 #include <Arduino.h>
 
 #ifdef ESP32
-#include <FS.h>
-#include <SPIFFS.h>
-#include <WiFi.h>
-#include <AsyncTCP.h>
+    #include <AsyncTCP.h>
+    #include <FS.h>
+    #include <SPIFFS.h>
+    #include <WiFi.h>
 #elif defined(ESP8266)
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
+    #include <ESP8266WiFi.h>
+    #include <ESPAsyncTCP.h>
 #endif
 
 #include <ezTime.h>
 #include <myWiFi.h>
 
-#include "pins.h"
-#include "tuinWebServer.h"
-#include "tuinLamp.h"
+#include "Adafruit_MQTT.h"
+#include "Adafruit_MQTT_Client.h"
 #include "Schedule.h"
 #include "button.h"
+#include "pins.h"
+#include "tuinLamp.h"
+#include "tuinWebServer.h"
 
 const char* ssid = __WIFI_SSID__;
 const char* password = __WIFI_PASW__;
@@ -33,13 +35,70 @@ Schedule lampEvening("Avond");
 
 button lampButton(PIN_TUIN_LAMP_BUTTON);
 
+/************************* Adafruit.io Setup *********************************/
+
+// #define MQTT_SECURE
+
+#define AIO_SERVER "io.adafruit.com"
+
+// WiFiFlientSecure for SSL/TLS support
+#ifdef MQTT_SECURE
+
+// Using port 8883 for MQTTS
+#define AIO_SERVERPORT 8883
+WiFiClientSecure client;
+// io.adafruit.com SHA1 fingerprint
+static const char* fingerprint PROGMEM = "77 00 54 2D DA E7 D8 03 27 31 23 99 EB 27 DB CB A5 4C 57 18";
+
+#else
+#define AIO_SERVERPORT 1883
+WiFiClient client;
+#endif
+
+// Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
+Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, IO_USERNAME, IO_KEY);
+
+Adafruit_MQTT_Publish mqtt_lamp = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/tuin13.tuinlamp");
+Adafruit_MQTT_Publish mqtt_uren = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/tuin13.branduren");
+Adafruit_MQTT_Subscribe mqtt_onoff = Adafruit_MQTT_Subscribe(&mqtt, IO_USERNAME "/feeds/tuin13.manual");
+
+unsigned long mqtt_retry_connect = 0;
+// Function to connect and reconnect as necessary to the MQTT server.
+// Should be called in the loop function and it will take care if connecting.
+void MQTT_connect() {
+    int8_t ret;
+
+    // Stop if already connected.
+    if (mqtt.connected()) {
+        return;
+    }
+
+    if (millis() < mqtt_retry_connect) {
+        return;
+    }
+
+    Serial.print(F("Connecting to MQTT... "));
+    mqtt_retry_connect = millis() + 5000; // Retry once every 5 seconds
+
+    if ((ret = mqtt.connect()) != 0) {  // connect will return 0 for connected
+        Serial.println(mqtt.connectErrorString(ret));
+        Serial.println(F("Retrying MQTT connection in 5 seconds..."));
+        mqtt.disconnect();
+        return;
+    } 
+
+    Serial.println(F("MQTT Connected!"));
+}
+
+/* *************************************************** */
+
 void initSun() {
-    Serial.println("Setting sun position");
+    Serial.println(F("Setting sun position"));
     sun = Dusk2Dawn(51.313363, 4.4954359, -CET.getOffset() / 60);
     lamp.setPosition(&sun);
 
     // Iedere dag om 03:05 -> Zet de zon opnieuw voor opvangen wijziging zomer/wintertijd
-    // (offset wijzigt dan namelijk)
+    // (bij winteruur/zomeruur wijziging om 03:05 altijd achter de rug)
 
     // Zet event voor morgen
     time_t morgen = CET.now() + SECS_PER_DAY;
@@ -50,8 +109,14 @@ void initSun() {
     morgen3_05.Second = 0;
 
     CET.setEvent(initSun, makeTime(morgen3_05));
-    Serial.println("Setting sun position - finished");
+    Serial.println(F("Setting sun position - finished)"));
 }
+
+// ** ************************************************* 
+// ** Logging
+unsigned long branduren_seconds = 0;
+uint16_t branduren_published = 0;
+time_t branduren_last_count = 0;
 
 void setup() {
     // Set all connected hardware to a save position
@@ -65,7 +130,6 @@ void setup() {
     digitalWrite(PIN_TUIN_LAMP_RELAY, LOW);
     digitalWrite(PIN_TUIN_LAMP_BUTTON, LOW);
 
-
     // Initialize and wait for serial
     Serial.begin(115200);
     while (!Serial) {
@@ -73,16 +137,15 @@ void setup() {
     }
     Serial.println();
     Serial.println();
-    Serial.println("==========================");
-    Serial.println(" Tuin13 - 2020 - Starting");
-    Serial.println("==========================");
+    Serial.println(F("=========================="));
+    Serial.println(F(" Tuin13 - 2020 - Starting"));
+    Serial.println(F("=========================="));
     Serial.println();
-    delay(1000);
 
     // WiFi connection
-    Serial.println("==========================");
-    Serial.println("Starting WiFi connection");
-    
+    Serial.println(F("=========================="));
+    Serial.println(F("Starting WiFi connection"));
+
     WiFi.hostname(hostname);
     WiFi.begin(ssid, password);
 
@@ -92,48 +155,42 @@ void setup() {
     }
 
     Serial.println();
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
+    Serial.println(F("WiFi connected"));
+    Serial.println(F("IP address: "));
     Serial.println(WiFi.localIP());
     Serial.println();
 
-    #ifdef ESP32
-        WiFi.enableIpV6();
-    #endif
-    delay(1000);
-    #ifdef ESP32
-        Serial.println(WiFi.localIPv6());
-    #endif
+#ifdef ESP32
+    WiFi.enableIpV6();
+    Serial.println(WiFi.localIPv6());
+#endif
     Serial.println();
-    delay(1000);
 
     // Time sync
-    Serial.println("==========================");
-    Serial.println("Time sync");
-    // setDebug(DEBUG);  
+    Serial.println(F("=========================="));
+    Serial.println(F("Time sync"));
+    // setDebug(DEBUG);
     waitForSync();
-    if (!CET.setCache(0)) CET.setLocation("Europe/Berlin");
-    Serial.println("Time is set.");
+    if (!CET.setCache(0)) CET.setLocation(F("Europe/Berlin"));
+    Serial.println(F("Time is set."));
     Serial.println(CET.dateTime());
     Serial.println();
-    delay(1000);
 
     // WebServer startup
-    Serial.println("==========================");
-    Serial.println("Filesystem");
+    Serial.println(F("=========================="));
+    Serial.println(F("Filesystem"));
     SPIFFS.begin();
-    Serial.println("Filesystem started");
+    Serial.println(F("Filesystem started"));
     Serial.println();
-    delay(1000);
 
     // Read settings and status
-    Serial.println("==========================");
-    Serial.println("Configuration");
+    Serial.println(F("=========================="));
+    Serial.println(F("Configuration"));
     lamp.prepare();
     lamp.setTimezone(&CET);
     initSun();
 
-    Serial.println("Schedule");
+    Serial.println(F("Schedule"));
     lampMorning.setStart(TIME_MODE_MIDNIGHT, 6, 45);
     lampMorning.setStop(TIME_MODE_SUNRISE, 0, 0);
 
@@ -142,45 +199,121 @@ void setup() {
 
     lampMorning.link(lampEvening);
     lamp.setSchedule(lampMorning);
-    Serial.print("Morning: ");
+    Serial.print(F("Morning: "));
     lampMorning.printStatus();
-    Serial.print("Evening: ");
+    Serial.print(F("Evening: "));
     lampEvening.printStatus();
 
     Serial.println();
     Serial.println();
-    delay(1000);
 
     // Hardware startup
-    Serial.println("==========================");
-    Serial.println("Hardware");
+    Serial.println(F("=========================="));
+    Serial.println(F("Hardware"));
     lampButton.begin();
     lamp.setButton(&lampButton);
     lamp.pins(PIN_TUIN_LAMP_ACTIVE, PIN_TUIN_LAMP_MANUAL, PIN_TUIN_LAMP_RELAY);
 
     Serial.println();
     Serial.println();
-    delay(1000);
+
+    // MQTT + Google Assistant
+    Serial.println(F("=========================="));
+    Serial.println(F("Adafruit MQTT - Connection to Google Assistant"));
+
+    #ifdef MQTT_SECURE
+        // check the fingerprint of io.adafruit.com's SSL cert
+        client.setFingerprint(fingerprint);
+    #endif
+
+    mqtt.subscribe(&mqtt_onoff);
+    MQTT_connect();
+    if (mqtt.connected()) {
+        // Set all to Zero
+        mqtt_lamp.publish(0);
+        mqtt.publish(IO_USERNAME "/feeds/tuin13.manual", "0");
+        // Clear mqtt queue, while we where gone
+        while (mqtt.readSubscription()) {
+        }
+    }
 
     // WebServer startup
-    Serial.println("==========================");
-    Serial.println("Webserver");
+    Serial.println(F("=========================="));
+    Serial.println(F("Webserver"));
     server.start(&CET, SPIFFS, &lamp, &sun);
-    Serial.println("Webserver started");
+    Serial.println(F("Webserver started"));
     Serial.println();
-    delay(1000);
+
+    branduren_last_count = now();
+    branduren_published = dayOfYear();
 
     Serial.println();
     Serial.println();
-    Serial.println("setup ready");
+    Serial.println(F("setup ready"));
 }
+
+unsigned long lastPublish = 0L;
+unsigned long lastPayload = 0L;
 
 void loop() {
     // put your main code here, to run repeatedly:
     events();
-    
-    if (millis() % 100 == 0) {
+    MQTT_connect();
+
+    if (lastPayload + 100 < millis()) {
+        lastPayload = millis();
         lampButton.loop();
         lamp.payload();
+    }
+    lamp.applyStatusLeds();
+    lamp.applyRelay();
+
+    time_t n = now();
+    if (lamp.isActive() && branduren_last_count != n) {
+        branduren_last_count = n;
+        branduren_seconds++;
+    }
+
+    if (mqtt.connected()) {
+        if (lastPublish + 60000 < millis()) {
+            lastPublish = millis();  // Every minute
+            Serial.print(F("MQQT: logging current value: "));
+            Serial.println(lamp.isActive());
+            mqtt_lamp.publish(lamp.isActive());
+        }
+
+        if (branduren_published != dayOfYear()) {
+            branduren_published = dayOfYear();
+            double uren = branduren_seconds / 3600.0;
+            Serial.print(F("MQTT: Logging branduren: "));
+            Serial.print(branduren_seconds);
+            Serial.print(F("sec = "));
+            Serial.print(uren);
+            Serial.println(F(" uren"));
+            mqtt_uren.publish(uren);
+            branduren_seconds = 0;
+        }
+
+        Adafruit_MQTT_Subscribe* subscription;
+        while ((subscription = mqtt.readSubscription())) {
+            if (subscription == &mqtt_onoff) {
+                Serial.print(F("MQTT: Received: "));
+                Serial.println((char*)mqtt_onoff.lastread);
+                int value = atoi((char*)mqtt_onoff.lastread);
+
+                switch (value) {
+                    case 0:
+                        lamp.manualOff();
+                        break;
+                    case 1:
+                        lamp.manualOn(4, 0);
+                        break;
+                    case 2:  // reset
+                        lamp.manualReset();
+                        break;
+                }
+                lamp.payload();
+            }
+        }
     }
 }

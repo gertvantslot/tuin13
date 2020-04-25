@@ -68,6 +68,14 @@ void tuinLamp::pins(uint8_t active, uint8_t manual, uint8_t relay) {
     pinMode(pin_relay, OUTPUT);
 }
 
+void tuinLamp::manualOn(uint8_t hours, uint8_t minutes) {
+    m_manual_override_end = nextMidnight(m_time->now()) 
+        + hours * SECS_PER_HOUR 
+        + minutes * SECS_PER_MIN;
+    m_manual_override = false;
+    m_manual_force_on = true;
+}
+
 void tuinLamp::manualOn() {
     if (m_autoActive) {
         // Automatisch aan => disable alle overrides
@@ -96,16 +104,19 @@ void tuinLamp::manualOff() {
 void tuinLamp::payload() {
     // Test button
     if (m_button->isClicked()) {
+        Serial.println(F("Button: Clicked"));
         m_manual_override = !m_manual_override;
     }
 
     if (m_button->isDoubleClicked()) {
+        Serial.println(F("Button: Double-Clicked"));
         m_manual_override = false;
         m_manual_force_on = true;
         m_manual_override_end = m_manual_override_duration + m_time->now();
     }
 
     if (m_button->isLongPress()) {
+        Serial.println(F("Button: Longpress"));
         m_manual_override = false;
         m_manual_force_on = false;
     }
@@ -116,18 +127,27 @@ void tuinLamp::payload() {
         // Autoactive changed => clear manual override
         m_autoActive = autoActive;
         m_manual_override = false;
+        Serial.print(F("Schedule: Changed: "));
+        Serial.println(isActive());
     }
 
-    debug("tuinLamp active: ");
+    debug(F("tuinLamp active: "));
     debugln(isActive());
+}
 
+void tuinLamp::applyStatusLeds() {
     // Set output
-    digitalWrite(pin_active, isActive());
+    // Flash every 2,5 seconds
+    int flash = (millis() % 2500) < 100 ? LOW : HIGH;
+    digitalWrite(pin_active, isActive() ? flash : !flash);
+
     if (m_manual_force_on) {
         digitalWrite(pin_manual, (millis() / 250) % 2);
     } else {
         digitalWrite(pin_manual, m_manual_override);
     }
+}
 
+void tuinLamp::applyRelay() {
     digitalWrite(pin_relay, isActive());
 }

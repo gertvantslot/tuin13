@@ -47,7 +47,7 @@ time_t ScheduleTime::whenSunset(Dusk2Dawn &sun, time_t t) {
     int d = day(t);
 
     time_t sunset = sun.sunset(y, m, d, false) * 60;
-    debug(" - sunset = ");
+    debug(F(" - sunset = "));
     debug(defaultTZ->dateTime(sunset));
 
     time_t result = previousMidnight(t) + sunset + m_offset;
@@ -112,18 +112,18 @@ time_t ScheduleTime::when(Dusk2Dawn &sun, time_t t) {
 void ScheduleTime::printStatus() {
     switch (m_mode) {
         case TIME_MODE_MIDNIGHT:
-            Serial.print("midnight");
+            Serial.print(F("midnight"));
             break;
         case TIME_MODE_SUNRISE:
-            Serial.print("sunrise");
+            Serial.print(F("sunrise"));
             break;
         case TIME_MODE_SUNSET:
-            Serial.print("sunset");
+            Serial.print(F("sunset"));
             break;
     }
-    Serial.print(" - ");
+    Serial.print(F(" - "));
     Serial.print(m_offset / SECS_PER_HOUR);
-    Serial.print(":");
+    Serial.print(F(":"));
     Serial.print((m_offset % SECS_PER_HOUR) / 60);
     Serial.println();
 }
@@ -148,28 +148,28 @@ void Schedule::link(Schedule &next) {
 }
 
 bool Schedule::isActive(Dusk2Dawn &sun, time_t t) {
-    debugln("Check schedule-item:");
+    debugln(F("Check schedule-item:"));
 
-    debug("now : ");
+    debug(F("now : "));
     debugln(defaultTZ->dateTime(t));
     time_t startSec = m_start.when(sun, t);
 
-    debug("start : ");
+    debug(F("start : "));
     debugln(defaultTZ->dateTime(startSec));
 
     if (t >= startSec) {
-        debugln(" - start passed");
+        debugln(F(" - start passed"));
         time_t stopSec = m_stop.when(sun, t);
         if (t <= stopSec) return true;
-        debugln(" - stop passed");
+        debugln(F(" - stop passed"));
     }
 
     if (m_next) {
-        debugln(" - Trying next item");
+        debugln(F(" - Trying next item"));
         return m_next->isActive(sun, t);
     }
 
-    debugln("Schedule - Not active");
+    debugln(F("Schedule - Not active"));
     return false;
 }
 

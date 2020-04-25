@@ -31,13 +31,13 @@ class ScheduleTime {
     }
 
     void json(Print &s) {
-        s.print("{ \"mode\": ");
+        s.print(F("{ \"mode\": "));
         s.print(m_mode);
-        s.print(", \"offset\": { \"hour\": ");
+        s.print(F(", \"offset\": { \"hour\": "));
         s.print(m_offset / SECS_PER_HOUR);
-        s.print(", \"minute\": ");
+        s.print(F(", \"minute\": "));
         s.print((m_offset % SECS_PER_HOUR) / 60);
-        s.print(" } }");
+        s.print(F(" } }"));
     }
 };
 
@@ -78,29 +78,29 @@ class Schedule {
     }
 
     void json(Print &s) {
-        s.print("{ \"name\": \"");
+        s.print(F("{ \"name\": \""));
         s.print(m_name);
-        s.print("\", \"start\": ");
+        s.print(F("\", \"start\": "));
         m_start.json(s);
-        s.print(", \"stop\": ");
+        s.print(F(", \"stop\": "));
         m_stop.json(s);
-        s.print(" }");
+        s.print(F(" }"));
     }
 
     void jsonAll(Print &s) {
         bool first = true;
         Schedule *current = this;
-        s.print("[ ");
+        s.print(F("[ "));
 
         while (current) {
             if (first) {
                 first = false;
             } else {
-                s.print(", ");
+                s.print(F(", "));
             }
             current->json(s);
             current = current->next();
         }
-        s.print("]");
+        s.print(F("]"));
     }
 };

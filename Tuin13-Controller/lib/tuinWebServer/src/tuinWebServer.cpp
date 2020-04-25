@@ -1,5 +1,8 @@
 #include "tuinWebServer.h"
 
+const char *text_plain = "text/plain";
+const char *application_json = "application/json";
+
 tuinWebServer ::tuinWebServer(uint16_t port) : AsyncWebServer(port) {
 }
 

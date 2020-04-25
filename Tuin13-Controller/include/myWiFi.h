@@ -12,3 +12,9 @@
 #ifndef __WIFI_HOSTNAME__
     #define __WIFI_HOSTNAME__ "tuin13"
 #endif
+
+// Adafruit IO
+#ifndef IO_USERNAME
+    #define IO_USERNAME  ""
+    #define IO_KEY       ""
+#endif

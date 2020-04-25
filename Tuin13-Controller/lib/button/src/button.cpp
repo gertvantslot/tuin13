@@ -23,7 +23,6 @@ void button::loop() {
             // Still pressed
             if (m_pressed_ms + m_longpress_duration < millis()) {
                 // long press
-                Serial.println("Longpress");
                 m_isLongPress = true;
                 m_isClicked = false;
                 m_isPressed = false;
@@ -33,7 +32,6 @@ void button::loop() {
             // First time button is down
             m_pressed_ms = millis();
             m_isPressed = true;
-            Serial.println("Press");
 
         }
     } else {
@@ -43,7 +41,6 @@ void button::loop() {
             // Check for doubleclick
             if (m_released_ms + m_doubleclick_duration > millis()) {
                 // Within doublepress interval
-                Serial.println("Doubleclick");
                 m_isDoubleClick = true;
                 m_surpressClick = true;
                 m_isClicked = false;
@@ -53,7 +50,6 @@ void button::loop() {
                 m_surpressClick = false;
             } else {
                 m_isClicked = true;
-                Serial.println("Clicked  = Released");
             }
             m_released_ms = millis();
             m_pressed_ms = millis(); // Rebound protection

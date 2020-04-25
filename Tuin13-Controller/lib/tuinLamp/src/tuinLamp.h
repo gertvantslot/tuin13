@@ -47,9 +47,15 @@ public:
     bool isForceOn();
     String overrideOnEnd() { return isForceOn() ? m_time->dateTime(m_manual_override_end) : String(""); }
 
+    void manualOn(uint8_t hours, uint8_t minutes);
     void manualOn();
     void manualOff();
+    void manualReset() {
+        m_manual_force_on = false;
+        m_manual_override = false;
+    }
 
     void payload();
-
+    void applyStatusLeds();
+    void applyRelay();
 };
