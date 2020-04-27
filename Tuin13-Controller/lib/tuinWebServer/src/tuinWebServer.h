@@ -123,6 +123,26 @@ class tuinWebServer : public AsyncWebServer {
         request->send(200, text_plain, m_lamp->isActive() ? "1" : "0");
     }
 
+    void onLampTimer(AsyncWebServerRequest *request) {
+        unsigned long seconds = m_lamp->brandurenSeconds();
+        if (seconds == 0) {
+            request->send(200, text_plain, "0 sec");
+            return;
+        }
+        AsyncResponseStream *response = request->beginResponseStream(text_plain);
+        uint8_t hours = seconds / SECS_PER_HOUR;
+        uint8_t minutes = (seconds % SECS_PER_HOUR) / SECS_PER_MIN;
+        uint8_t s = seconds % SECS_PER_MIN;
+
+        response->print(hours);
+        response->print(" uur ");
+        response->print(minutes);
+        response->print(" min ");
+        response->print(s);
+        response->print(" sec");
+        request->send(response);
+    }
+
     void onLampStatus(AsyncWebServerRequest *request) {
         String description;
         if (m_lamp->isActive()) {

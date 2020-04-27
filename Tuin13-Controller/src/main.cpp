@@ -1,13 +1,13 @@
 #include <Arduino.h>
 
 #ifdef ESP32
-    #include <AsyncTCP.h>
-    #include <FS.h>
-    #include <SPIFFS.h>
-    #include <WiFi.h>
+#include <AsyncTCP.h>
+#include <FS.h>
+#include <SPIFFS.h>
+#include <WiFi.h>
 #elif defined(ESP8266)
-    #include <ESP8266WiFi.h>
-    #include <ESPAsyncTCP.h>
+#include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h>
 #endif
 
 #include <ezTime.h>
@@ -58,9 +58,15 @@ WiFiClient client;
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, IO_USERNAME, IO_KEY);
 
+#ifdef TESTDEVICE
+Adafruit_MQTT_Publish mqtt_lamp = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/debug.tuinlamp");
+Adafruit_MQTT_Publish mqtt_uren = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/debug.branduren");
+Adafruit_MQTT_Subscribe mqtt_onoff = Adafruit_MQTT_Subscribe(&mqtt, IO_USERNAME "/feeds/debug.manual");
+#else
 Adafruit_MQTT_Publish mqtt_lamp = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/tuin13.tuinlamp");
 Adafruit_MQTT_Publish mqtt_uren = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/tuin13.branduren");
 Adafruit_MQTT_Subscribe mqtt_onoff = Adafruit_MQTT_Subscribe(&mqtt, IO_USERNAME "/feeds/tuin13.manual");
+#endif
 
 unsigned long mqtt_retry_connect = 0;
 // Function to connect and reconnect as necessary to the MQTT server.
@@ -78,14 +84,14 @@ void MQTT_connect() {
     }
 
     Serial.print(F("Connecting to MQTT... "));
-    mqtt_retry_connect = millis() + 5000; // Retry once every 5 seconds
+    mqtt_retry_connect = millis() + 5000;  // Retry once every 5 seconds
 
     if ((ret = mqtt.connect()) != 0) {  // connect will return 0 for connected
         Serial.println(mqtt.connectErrorString(ret));
         Serial.println(F("Retrying MQTT connection in 5 seconds..."));
         mqtt.disconnect();
         return;
-    } 
+    }
 
     Serial.println(F("MQTT Connected!"));
 }
@@ -111,12 +117,6 @@ void initSun() {
     CET.setEvent(initSun, makeTime(morgen3_05));
     Serial.println(F("Setting sun position - finished)"));
 }
-
-// ** ************************************************* 
-// ** Logging
-unsigned long branduren_seconds = 0;
-uint16_t branduren_published = 0;
-time_t branduren_last_count = 0;
 
 void setup() {
     // Set all connected hardware to a save position
@@ -173,6 +173,7 @@ void setup() {
     waitForSync();
     if (!CET.setCache(0)) CET.setLocation(F("Europe/Berlin"));
     Serial.println(F("Time is set."));
+    CET.setDefault();  // Use CET as default timezone
     Serial.println(CET.dateTime());
     Serial.println();
 
@@ -192,10 +193,10 @@ void setup() {
 
     Serial.println(F("Schedule"));
     lampMorning.setStart(TIME_MODE_MIDNIGHT, 6, 45);
-    lampMorning.setStop(TIME_MODE_SUNRISE, 0, 0);
+    lampMorning.setStop(TIME_MODE_SUNRISE, 0, 00);
 
-    lampEvening.setStart(TIME_MODE_SUNSET, 0, 0);
-    lampEvening.setStop(TIME_MODE_MIDNIGHT, 22, 48);
+    lampEvening.setStart(TIME_MODE_SUNSET, 0, 00);
+    lampEvening.setStop(TIME_MODE_MIDNIGHT, 23, 00);
 
     lampMorning.link(lampEvening);
     lamp.setSchedule(lampMorning);
@@ -219,12 +220,12 @@ void setup() {
 
     // MQTT + Google Assistant
     Serial.println(F("=========================="));
-    Serial.println(F("Adafruit MQTT - Connection to Google Assistant"));
+    Serial.println(F("Adafruit MQTT"));
 
-    #ifdef MQTT_SECURE
-        // check the fingerprint of io.adafruit.com's SSL cert
-        client.setFingerprint(fingerprint);
-    #endif
+#ifdef MQTT_SECURE
+    // check the fingerprint of io.adafruit.com's SSL cert
+    client.setFingerprint(fingerprint);
+#endif
 
     mqtt.subscribe(&mqtt_onoff);
     MQTT_connect();
@@ -236,16 +237,14 @@ void setup() {
         while (mqtt.readSubscription()) {
         }
     }
+    Serial.println();
+    Serial.println();
 
     // WebServer startup
     Serial.println(F("=========================="));
     Serial.println(F("Webserver"));
     server.start(&CET, SPIFFS, &lamp, &sun);
     Serial.println(F("Webserver started"));
-    Serial.println();
-
-    branduren_last_count = now();
-    branduren_published = dayOfYear();
 
     Serial.println();
     Serial.println();
@@ -254,13 +253,13 @@ void setup() {
 
 unsigned long lastPublish = 0L;
 unsigned long lastPayload = 0L;
+unsigned long lastMqttCheck = 0L;
 
 void loop() {
     // put your main code here, to run repeatedly:
     events();
-    MQTT_connect();
 
-    if (lastPayload + 100 < millis()) {
+    if (millis() - lastPayload >= 100) {
         lastPayload = millis();
         lampButton.loop();
         lamp.payload();
@@ -268,51 +267,56 @@ void loop() {
     lamp.applyStatusLeds();
     lamp.applyRelay();
 
-    time_t n = now();
-    if (lamp.isActive() && branduren_last_count != n) {
-        branduren_last_count = n;
-        branduren_seconds++;
-    }
+    if (millis() - lastMqttCheck >= 333) {
+        // Check 3x per second
+        // readSubscription is slow, so do not do this in every loop() round
+        lastMqttCheck = millis();
 
-    if (mqtt.connected()) {
-        if (lastPublish + 60000 < millis()) {
-            lastPublish = millis();  // Every minute
-            Serial.print(F("MQQT: logging current value: "));
-            Serial.println(lamp.isActive());
-            mqtt_lamp.publish(lamp.isActive());
-        }
+        MQTT_connect();
 
-        if (branduren_published != dayOfYear()) {
-            branduren_published = dayOfYear();
-            double uren = branduren_seconds / 3600.0;
-            Serial.print(F("MQTT: Logging branduren: "));
-            Serial.print(branduren_seconds);
-            Serial.print(F("sec = "));
-            Serial.print(uren);
-            Serial.println(F(" uren"));
-            mqtt_uren.publish(uren);
-            branduren_seconds = 0;
-        }
+        if (mqtt.connected()) {
+            if (millis() - lastPublish >= 60000) {
+                lastPublish = millis();  // Every minute
+                Serial.print(CET.dateTime());
+                Serial.print(F(" - MQQT: logging current value: "));
+                Serial.println(lamp.isActive());
+                mqtt_lamp.publish(lamp.isActive());
+            }
 
-        Adafruit_MQTT_Subscribe* subscription;
-        while ((subscription = mqtt.readSubscription())) {
-            if (subscription == &mqtt_onoff) {
-                Serial.print(F("MQTT: Received: "));
-                Serial.println((char*)mqtt_onoff.lastread);
-                int value = atoi((char*)mqtt_onoff.lastread);
+            if (lamp.brandurenPublish()) {
+                unsigned long branduren_seconds = lamp.brandurenSeconds();
+                double uren = branduren_seconds / 3600.0;
+                Serial.print(CET.dateTime());
+                Serial.print(F(" MQTT: Logging branduren: "));
+                Serial.print(branduren_seconds);
+                Serial.print(F("sec = "));
+                Serial.print(uren);
+                Serial.println(F(" uren"));
+                mqtt_uren.publish(uren);
+                lamp.brandurenMarkPublished();
+            }
 
-                switch (value) {
-                    case 0:
-                        lamp.manualOff();
-                        break;
-                    case 1:
-                        lamp.manualOn(4, 0);
-                        break;
-                    case 2:  // reset
-                        lamp.manualReset();
-                        break;
+            Adafruit_MQTT_Subscribe* subscription;
+            while ((subscription = mqtt.readSubscription())) {
+                if (subscription == &mqtt_onoff) {
+                    Serial.print(CET.dateTime());
+                    Serial.print(F(" MQTT: Received: "));
+                    Serial.println((char*)mqtt_onoff.lastread);
+                    int value = atoi((char*)mqtt_onoff.lastread);
+
+                    switch (value) {
+                        case 0:
+                            lamp.manualOff();
+                            break;
+                        case 1:
+                            lamp.manualOn(4, 0);
+                            break;
+                        case 2:  // reset
+                            lamp.manualReset();
+                            break;
+                    }
+                    lamp.payload();
                 }
-                lamp.payload();
             }
         }
     }

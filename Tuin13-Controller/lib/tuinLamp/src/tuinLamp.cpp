@@ -26,6 +26,10 @@ void tuinLamp::setPosition(Dusk2Dawn *sun) {
 
 void tuinLamp::setTimezone(Timezone *time) {
     m_time = time;
+
+    m_branduren_last_count = m_time->now();
+    m_branduren_published = m_time->dayOfYear();
+    m_branduren_seconds = 0;
 }
 
 void tuinLamp::setSchedule(Schedule &first) {
@@ -69,9 +73,7 @@ void tuinLamp::pins(uint8_t active, uint8_t manual, uint8_t relay) {
 }
 
 void tuinLamp::manualOn(uint8_t hours, uint8_t minutes) {
-    m_manual_override_end = nextMidnight(m_time->now()) 
-        + hours * SECS_PER_HOUR 
-        + minutes * SECS_PER_MIN;
+    m_manual_override_end = nextMidnight(m_time->now()) + hours * SECS_PER_HOUR + minutes * SECS_PER_MIN;
     m_manual_override = false;
     m_manual_force_on = true;
 }
@@ -133,13 +135,19 @@ void tuinLamp::payload() {
 
     debug(F("tuinLamp active: "));
     debugln(isActive());
+
+    if (isActive() && m_branduren_last_count != n) {
+        m_branduren_last_count = n;
+        m_branduren_seconds++;
+    }
 }
 
 void tuinLamp::applyStatusLeds() {
     // Set output
     // Flash every 2,5 seconds
     int flash = (millis() % 2500) < 100 ? LOW : HIGH;
-    digitalWrite(pin_active, isActive() ? flash : !flash);
+    int pwm = (isActive() ? flash : !flash) ? 256 : 0;
+    analogWrite(pin_active, pwm);
 
     if (m_manual_force_on) {
         digitalWrite(pin_manual, (millis() / 250) % 2);
@@ -150,4 +158,17 @@ void tuinLamp::applyStatusLeds() {
 
 void tuinLamp::applyRelay() {
     digitalWrite(pin_relay, isActive());
+}
+
+bool tuinLamp::brandurenPublish() {
+    return m_branduren_published != m_time->dayOfYear();
+}
+
+unsigned long tuinLamp::brandurenSeconds() {
+    return m_branduren_seconds;
+}
+
+void tuinLamp::brandurenMarkPublished() {
+    m_branduren_seconds = 0;
+    m_branduren_published = m_time->dayOfYear();
 }

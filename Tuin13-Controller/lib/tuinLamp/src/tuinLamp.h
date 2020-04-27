@@ -28,6 +28,12 @@ private:
 
     bool m_debug = false;
 
+    // ** *************************************************
+    // ** Logging
+    unsigned long m_branduren_seconds = 0;
+    uint16_t m_branduren_published = 0;
+    time_t m_branduren_last_count = 0;
+
 public:
     tuinLamp(/* args */);
     ~tuinLamp();
@@ -58,4 +64,8 @@ public:
     void payload();
     void applyStatusLeds();
     void applyRelay();
+
+    bool brandurenPublish();
+    unsigned long brandurenSeconds();
+    void brandurenMarkPublished();
 };
