@@ -29,7 +29,6 @@ size_t printTime(time_t t, char *buffer) {
     return printTime(tm.Hour, tm.Minute, buffer);
 }
 
-
 time_t ScheduleTime::whenSunrise(Dusk2Dawn &sun, time_t t) {
     // Get reference time of current sunrise
     int y = year(t);
@@ -42,18 +41,10 @@ time_t ScheduleTime::whenSunrise(Dusk2Dawn &sun, time_t t) {
 
 time_t ScheduleTime::whenSunset(Dusk2Dawn &sun, time_t t) {
     // Get reference time of current sunrise
-    int y = year(t);
-    int m = month(t);
-    int d = day(t);
-
-    time_t sunset = sun.sunset(y, m, d, false) * 60;
-    debug(F(" - sunset = "));
-    debug(defaultTZ->dateTime(sunset));
-
+    tmElements_t tm;
+    breakTime(t, tm);
+    time_t sunset = sun.sunset(tm.Year, tm.Month, tm.Day, false) * 60;
     time_t result = previousMidnight(t) + sunset + m_offset;
-    debug(" - ");
-    debug(defaultTZ->dateTime(result));
-    debugln();
 
     return result;
 }
@@ -95,14 +86,10 @@ ScheduleTime::ScheduleTime(uint8_t mode, int hours, int minutes) {
 time_t ScheduleTime::when(Dusk2Dawn &sun, time_t t) {
     switch (m_mode) {
         case TIME_MODE_MIDNIGHT:
-            debugln(" - midnight");
-            debugln(m_offset);
             return previousMidnight(t) + m_offset;
         case TIME_MODE_SUNRISE:
-            debugln(" - sunrise");
             return whenSunrise(sun, t);
         case TIME_MODE_SUNSET:
-            debugln(" - sunset");
             return whenSunset(sun, t);
         default:
             return -1;
@@ -148,28 +135,15 @@ void Schedule::link(Schedule &next) {
 }
 
 bool Schedule::isActive(Dusk2Dawn &sun, time_t t) {
-    debugln(F("Check schedule-item:"));
-
-    debug(F("now : "));
-    debugln(defaultTZ->dateTime(t));
     time_t startSec = m_start.when(sun, t);
-
-    debug(F("start : "));
-    debugln(defaultTZ->dateTime(startSec));
-
     if (t >= startSec) {
-        debugln(F(" - start passed"));
         time_t stopSec = m_stop.when(sun, t);
         if (t <= stopSec) return true;
-        debugln(F(" - stop passed"));
     }
 
     if (m_next) {
-        debugln(F(" - Trying next item"));
         return m_next->isActive(sun, t);
     }
-
-    debugln(F("Schedule - Not active"));
     return false;
 }
 

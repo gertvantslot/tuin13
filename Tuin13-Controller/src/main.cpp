@@ -21,6 +21,21 @@
 #include "tuinLamp.h"
 #include "tuinWebServer.h"
 
+#ifdef TESTDEVICE
+#define debug(args...) \
+    if (m_debug) Serial.print(args)
+#define debugln(args...) \
+    if (m_debug) Serial.println(args)
+#else
+#define debug(args...)
+#define debugln(args...)
+#endif
+
+#define l(args...) \
+    Serial.print(args)
+#define ln(args...) \
+    Serial.println(args)
+
 const char* ssid = __WIFI_SSID__;
 const char* password = __WIFI_PASW__;
 const char* hostname = __WIFI_HOSTNAME__;
@@ -83,17 +98,17 @@ void MQTT_connect() {
         return;
     }
 
-    Serial.print(F("Connecting to MQTT... "));
+    l(F("Connecting to MQTT... "));
     mqtt_retry_connect = millis() + 5000;  // Retry once every 5 seconds
 
     if ((ret = mqtt.connect()) != 0) {  // connect will return 0 for connected
-        Serial.println(mqtt.connectErrorString(ret));
-        Serial.println(F("Retrying MQTT connection in 5 seconds..."));
+        ln(mqtt.connectErrorString(ret));
+        l(F("Retrying MQTT connection in 5 seconds..."));
         mqtt.disconnect();
         return;
     }
 
-    Serial.println(F("MQTT Connected!"));
+    l(F("MQTT Connected!"));
 }
 
 /* *************************************************** */
@@ -132,9 +147,7 @@ void setup() {
 
     // Initialize and wait for serial
     Serial.begin(115200);
-    while (!Serial) {
-        ;
-    }
+    delay(500);
     Serial.println();
     Serial.println();
     Serial.println(F("=========================="));
@@ -195,8 +208,12 @@ void setup() {
     lampMorning.setStart(TIME_MODE_MIDNIGHT, 6, 45);
     lampMorning.setStop(TIME_MODE_SUNRISE, 0, 00);
 
+#if TESTDEVICE
+    lampEvening.setStart(TIME_MODE_SUNSET, 2, 25);
+#else
     lampEvening.setStart(TIME_MODE_SUNSET, 0, 00);
-    lampEvening.setStop(TIME_MODE_MIDNIGHT, 23, 00);
+    #endif
+    lampEvening.setStop(TIME_MODE_MIDNIGHT, 23, 30);
 
     lampMorning.link(lampEvening);
     lamp.setSchedule(lampMorning);
@@ -232,9 +249,16 @@ void setup() {
     if (mqtt.connected()) {
         // Set all to Zero
         mqtt_lamp.publish(0);
-        mqtt.publish(IO_USERNAME "/feeds/tuin13.manual", "0");
+
+        // Reset manual activation
+        #ifdef TESTDEVICE
+        mqtt.publish(IO_USERNAME "/feeds/debug.manual", "2");
+        #else
+        mqtt.publish(IO_USERNAME "/feeds/tuin13.manual", "2");
+        #endif
+
         // Clear mqtt queue, while we where gone
-        while (mqtt.readSubscription()) {
+        while (mqtt.readSubscription(1000)) {
         }
     }
     Serial.println();
@@ -249,6 +273,10 @@ void setup() {
     Serial.println();
     Serial.println();
     Serial.println(F("setup ready"));
+#ifdef TESTDEVICE
+    Serial.println(F("=========================="));
+    Serial.println(F("Running on TESTDEVICE"));
+#endif
 }
 
 unsigned long lastPublish = 0L;

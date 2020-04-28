@@ -14,15 +14,20 @@ class ScheduleTime {
     uint8_t m_mode = TIME_MODE_MIDNIGHT;
     time_t m_offset;
 
-    time_t whenSunrise(Dusk2Dawn &sun, time_t t);
-    time_t whenSunset(Dusk2Dawn &sun, time_t t);
+#ifdef TESTDEVICE
+    bool m_debug = true;
+#else
     bool m_debug = false;
+#endif
 
     char m_description[16];
 
    public:
     ScheduleTime(uint8_t mode, int hours, int minutes);
     time_t when(Dusk2Dawn &sun, time_t t);
+    time_t whenSunrise(Dusk2Dawn &sun, time_t t);
+    time_t whenSunset(Dusk2Dawn &sun, time_t t);
+
     void printStatus();
 
     const char *description(char *buffer, size_t len) {
@@ -51,14 +56,21 @@ class Schedule {
 
     Schedule *m_next;
 
+#ifdef TESTDEVICE
+    bool m_debug = true;
+#else
     bool m_debug = false;
+#endif
 
    public:
     Schedule(const char *name);
     ~Schedule();
 
     void setStart(int mode, int hours, int minutes);
+    ScheduleTime *start() { return &m_start; }
     void setStop(int mode, int hours, int minutes);
+    ScheduleTime *stop() { return &m_stop; }
+    
     void link(Schedule &next);
     Schedule *next() { return m_next; }
     bool isActive(Dusk2Dawn &sun, time_t t);

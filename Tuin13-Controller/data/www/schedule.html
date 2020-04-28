@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="nl">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Feather icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <title>Tuin-13 - Wijzigen schema</title>
+
+    <script>
+        String.prototype.lpad = function (padString, length) {
+            var str = this;
+            while (str.length < length)
+                str = padString + str;
+            return str;
+        }
+
+        function time(data) {
+            var offset = String(data.offset.hour).lpad("0", 2)
+                + ":"
+                + String(data.offset.minute).lpad("0", 2);
+            return offset;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron text-light" style="background-image: url('img/bg.jpg'); background-size: cover;">
+            <h1 class="display-3" id="title">Tuin-13</h1>
+            <hr>
+            <div class="lead">Wijzigen schema.</div>
+        </div>
+        <form class="form" method="POST" action="schedule.save.html">
+            <input type="hidden" name="idx" value="0" />
+
+            <div class="row">
+
+                <div class="col">
+                    <div class="card border-success">
+                        <div class="card-header lead display-4 bg-success text-light">
+                            Start<sup><i data-feather="play-circle"></i></sup>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <div class="form-group">
+                                    <div class="form-check xform-check-inline">
+                                        <input class="form-check-input" type="radio" name="start-mode" id="start-tijd"
+                                            value="0">
+                                        <label class="form-check-label" for="start-tijd"><i data-feather="clock"></i>
+                                            Tijd</label>
+                                    </div>
+                                    <div class="form-check xform-check-inline">
+                                        <input class="form-check-input" type="radio" name="start-mode"
+                                            id="start-sunrise" value="2">
+                                        <label class="form-check-label" for="start-sunrise"><i
+                                                data-feather="sunrise"></i> Zon op</label>
+                                    </div>
+                                    <div class="form-check xform-check-inline">
+                                        <input class="form-check-input" type="radio" name="start-mode" id="start-sunset"
+                                            value="1">
+                                        <label class="form-check-label" for="start-sunset"><i data-feather="sunset"></i>
+                                            Zon onder</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="time" name="start-time" id="start-time" />
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-danger">
+                        <div class="card-header lead display-4 bg-danger text-light">
+                            Stop<sup><i data-feather="pause-circle"></i></sup>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <div class="form-group">
+                                    <div class="form-check xform-check-inline">
+                                        <input class="form-check-input" type="radio" name="stop-mode" id="stop-tijd"
+                                            value="0">
+                                        <label class="form-check-label" for="stop-tijd"><i data-feather="clock"></i>
+                                            Tijd</label>
+                                    </div>
+                                    <div class="form-check xform-check-inline">
+                                        <input class="form-check-input" type="radio" name="stop-mode" id="stop-sunrise"
+                                            value="2">
+                                        <label class="form-check-label" for="stop-sunrise"><i
+                                                data-feather="sunrise"></i> Zon op</label>
+                                    </div>
+                                    <div class="form-check xform-check-inline">
+                                        <input class="form-check-input" type="radio" name="stop-mode" id="stop-sunset"
+                                            value="1">
+                                        <label class="form-check-label" for="stop-sunset"><i data-feather="sunset"></i>
+                                            Zon onder</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="time" name="stop-time" id="stop-time" />
+                                </div>
+
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">OK</button>
+                </div>
+            </div>
+        </form>
+
+
+
+        <div class="footer">
+            <hr />
+            Tuin 13 | By GvS
+        </div>
+
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idx = urlParams.get('idx');
+            $('[name="idx"]').val(idx);
+            $.ajax({
+                url: "api/lamp/schedule.json"
+            }).done(function (data) {
+                var schedule = data.schedule[idx];
+                $("#title").text(schedule.name);
+                $("#start-time").val(time(schedule.start));
+                $('[name="start-mode"]').removeAttr('checked');
+                $("input[name=start-mode][value=" + schedule.start.mode + "]").prop('checked', true);
+
+                $("#stop-time").val(time(schedule.stop));
+                $('[name="stop-mode"]').removeAttr('checked');
+                $("input[name=stop-mode][value=" + schedule.stop.mode + "]").prop('checked', true);
+            });
+        });
+        feather.replace();
+    </script>
+</body>
+
+</html>

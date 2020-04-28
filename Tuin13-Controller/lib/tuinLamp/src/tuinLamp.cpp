@@ -3,10 +3,15 @@
 #include "Dusk2Dawn.h"
 #include "ezTime.h"
 
+#ifdef TESTDEVICE
 #define debug(args...) \
     if (m_debug) Serial.print(args)
 #define debugln(args...) \
     if (m_debug) Serial.println(args)
+#else
+#define debug(args...)
+#define debugln(args...)
+#endif
 
 tuinLamp::tuinLamp(/* args */) {
 }

@@ -23,7 +23,7 @@
                 "mode": 1,
                 "offset" : {
                     "hour": 0,
-                    "minute": 0
+                    "minute": 15
                 }
             },
             "stop": {

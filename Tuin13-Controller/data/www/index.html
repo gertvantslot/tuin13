@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
 
 <head>
     <!-- Required meta tags -->
@@ -41,13 +41,13 @@
                 html = offset;
             } else if (data.mode == 1) {
                 icon = "sunset";
-                if (data.offset.hour != 0 && data.offset.minute != 0) {
-                    html = " + " + offset;
+                if (data.offset.hour != 0 || data.offset.minute != 0) {
+                    html = offset;
                 }
             } else if (data.mode == 2) {
                 icon = "sunrise";
-                if (data.offset.hour != 0 && data.offset.minute != 0) {
-                    html = " + " + offset;
+                if (data.offset.hour != 0 || data.offset.minute != 0) {
+                    html = offset;
                 }
             }
 
@@ -60,7 +60,7 @@
 
 <body>
     <div class="container">
-        <div class="jumbotron">
+        <div class="jumbotron text-light" style="background-image: url('img/bg.jpg'); background-size: cover;">
             <h1 class="display-3">Tuin-13</h1>
             <hr>
             <div class="lead">Onze tuinlamp.</div>
@@ -124,12 +124,14 @@
                             <td id="s0_start">00:00</td>
                             <td><i data-feather="arrow-right"></i></td>
                             <td id="s0_stop">Zon</td>
+                            <td><a href="schedule.html?idx=0" class="btn btn-primary btn-sm"><i data-feather="edit"></i></a></td>
                         </tr>
                         <tr>
                             <td id="s1_name">Avond</td>
                             <td id="s1_start">Zon</td>
                             <td><i data-feather="arrow-right"></i></td>
                             <td id="s1_stop">23:59</td>
+                            <td><a href="schedule.html?idx=1" class="btn  btn-primary btn-sm"><i data-feather="edit"></i></a></td>
                         </tr>
                     </table>
                     <div class="loadf" data-src="api/lamp/schedule.json" data-action="fSchedule"></div>
@@ -291,7 +293,7 @@
     </script>
 
     <script>
-        feather.replace()
+        feather.replace();
     </script>
 </body>
 

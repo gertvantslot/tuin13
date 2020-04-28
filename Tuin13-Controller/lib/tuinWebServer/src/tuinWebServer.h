@@ -189,6 +189,8 @@ class tuinWebServer : public AsyncWebServer {
         onLampStatus(request);
     }
 
+    void onScheduleSave(AsyncWebServerRequest *request);
+
    public:
     tuinWebServer(uint16_t port);
     void start(Timezone *timezone, fs::FS &fs, tuinLamp *lamp, Dusk2Dawn *sun);
