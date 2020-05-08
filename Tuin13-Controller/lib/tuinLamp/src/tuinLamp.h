@@ -3,8 +3,11 @@
 #include <Arduino.h>
 #include <ezTime.h>
 #include <Dusk2Dawn.h>
-#include <Schedule.h>
+#include <MySchedule.h>
 #include <button.h>
+
+#define SETTINGS_UNKNOWN -1
+#define MAGIC_SETTINGS_NUMBER 0x2507
 
 class tuinLamp
 {
@@ -27,6 +30,8 @@ private:
     time_t m_manual_override_end;
 
     bool m_debug = false;
+
+    int m_eeprom_address = SETTINGS_UNKNOWN;
 
     // ** *************************************************
     // ** Logging
@@ -68,4 +73,7 @@ public:
     bool brandurenPublish();
     unsigned long brandurenSeconds();
     void brandurenMarkPublished();
+
+    void restoreConfig(uint16_t address);
+    void storeConfig();
 };

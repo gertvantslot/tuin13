@@ -10,7 +10,7 @@ void button::loop() {
     // m_isDoubleClick = false;
     // m_isLongPress = false;
 
-    if (millis() + m_rebounce_duration < m_pressed_ms) {
+    if (millis() - m_pressed_ms < m_rebounce_duration) {
         // Rebounce protection
         return;
     }
@@ -21,7 +21,7 @@ void button::loop() {
         // Button is down
         if (prevState) {
             // Still pressed
-            if (m_pressed_ms + m_longpress_duration < millis()) {
+            if (millis() - m_pressed_ms > m_longpress_duration) {
                 // long press
                 m_isLongPress = true;
                 m_isClicked = false;
@@ -39,7 +39,7 @@ void button::loop() {
         if (prevState) {
             // Button is released
             // Check for doubleclick
-            if (m_released_ms + m_doubleclick_duration > millis()) {
+            if (millis() - m_released_ms < m_doubleclick_duration) {
                 // Within doublepress interval
                 m_isDoubleClick = true;
                 m_surpressClick = true;

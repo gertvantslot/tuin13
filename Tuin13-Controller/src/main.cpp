@@ -15,7 +15,7 @@
 
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
-#include "Schedule.h"
+#include "MySchedule.h"
 #include "button.h"
 #include "pins.h"
 #include "tuinLamp.h"
@@ -35,6 +35,9 @@
     Serial.print(args)
 #define ln(args...) \
     Serial.println(args)
+
+#define EEPROM_ADDRESS_EZTIME 0x00
+#define EEPROM_ADDRESS_LAMP   0x40
 
 const char* ssid = __WIFI_SSID__;
 const char* password = __WIFI_PASW__;
@@ -73,7 +76,7 @@ WiFiClient client;
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, IO_USERNAME, IO_KEY);
 
-#ifdef TESTDEVICE
+#if TESTDEVICE
 Adafruit_MQTT_Publish mqtt_lamp = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/debug.tuinlamp");
 Adafruit_MQTT_Publish mqtt_uren = Adafruit_MQTT_Publish(&mqtt, IO_USERNAME "/feeds/debug.branduren");
 Adafruit_MQTT_Subscribe mqtt_onoff = Adafruit_MQTT_Subscribe(&mqtt, IO_USERNAME "/feeds/debug.manual");
@@ -115,7 +118,7 @@ void MQTT_connect() {
 
 void initSun() {
     Serial.println(F("Setting sun position"));
-    sun = Dusk2Dawn(51.313363, 4.4954359, -CET.getOffset() / 60);
+    sun = Dusk2Dawn(51.313363, 4.4954359, -CET.getOffset() / SECS_PER_MIN);
     lamp.setPosition(&sun);
 
     // Iedere dag om 03:05 -> Zet de zon opnieuw voor opvangen wijziging zomer/wintertijd
@@ -172,7 +175,6 @@ void setup() {
     Serial.println(F("IP address: "));
     Serial.println(WiFi.localIP());
     Serial.println();
-
 #ifdef ESP32
     WiFi.enableIpV6();
     Serial.println(WiFi.localIPv6());
@@ -184,7 +186,9 @@ void setup() {
     Serial.println(F("Time sync"));
     // setDebug(DEBUG);
     waitForSync();
-    if (!CET.setCache(0)) CET.setLocation(F("Europe/Berlin"));
+    if (!CET.setCache(EEPROM_ADDRESS_EZTIME)) {
+        CET.setLocation(F("Europe/Berlin"));
+    }
     Serial.println(F("Time is set."));
     CET.setDefault();  // Use CET as default timezone
     Serial.println(CET.dateTime());
@@ -212,11 +216,13 @@ void setup() {
     lampEvening.setStart(TIME_MODE_SUNSET, 2, 25);
 #else
     lampEvening.setStart(TIME_MODE_SUNSET, 0, 00);
-    #endif
+#endif
     lampEvening.setStop(TIME_MODE_MIDNIGHT, 23, 30);
 
     lampMorning.link(lampEvening);
     lamp.setSchedule(lampMorning);
+    lamp.restoreConfig(EEPROM_ADDRESS_LAMP);
+
     Serial.print(F("Morning: "));
     lampMorning.printStatus();
     Serial.print(F("Evening: "));
@@ -349,3 +355,4 @@ void loop() {
         }
     }
 }
+

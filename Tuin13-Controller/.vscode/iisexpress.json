@@ -1,6 +1,6 @@
 {
   "port": 5999,
-  "path": "c:\\Users\\gert\\source\\repos\\tuin13\\Tuin13-Controller",
+  "path": "c:\\Users\\gert\\source\\repos\\tuin13\\Tuin13-Controller\\data\\www",
   "clr": "v4.0",
   "protocol": "http"
 }

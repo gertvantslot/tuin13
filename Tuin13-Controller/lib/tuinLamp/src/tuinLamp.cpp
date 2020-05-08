@@ -1,4 +1,5 @@
 #include "tuinLamp.h"
+#include <EEPROM.h>
 
 #include "Dusk2Dawn.h"
 #include "ezTime.h"
@@ -176,4 +177,67 @@ unsigned long tuinLamp::brandurenSeconds() {
 void tuinLamp::brandurenMarkPublished() {
     m_branduren_seconds = 0;
     m_branduren_published = m_time->dayOfYear();
+}
+
+void tuinLamp::restoreConfig(uint16_t address) {
+    m_eeprom_address = address;
+    EEPROM.begin(4096);
+
+    bool found = false;
+
+    int offset = address;
+    int magic = 0;
+    EEPROM.get(offset, magic);
+    offset += sizeof(magic);
+
+    // Magic code is correct
+    if (magic == MAGIC_SETTINGS_NUMBER) {
+        // Get version
+        int version = 0;
+        EEPROM.get(offset, version);
+        offset += sizeof(version);
+
+        if (version == 3) {
+            // Version 3
+            Serial.println(F("Retrieving configuration"));
+            found = true;
+            Schedule *ochtend = getSchedule();
+            Schedule *avond = ochtend->next();
+
+            offset = ochtend->getFromEEPROM(offset);
+            ochtend->printStatus();
+            offset = avond->getFromEEPROM(offset);
+            avond->printStatus();
+            Serial.println(F("Configuration restored"));
+        }
+    } 
+    EEPROM.end();
+    
+    if (!found) {
+        Serial.println(F("No configuration stored"));
+    }
+}
+
+void tuinLamp::storeConfig() {
+    if (m_eeprom_address == SETTINGS_UNKNOWN) {
+        return; // No address set
+    }
+    Serial.println("Storing configuration");
+    int offset = m_eeprom_address;
+    EEPROM.begin(4096);
+
+    int magic = MAGIC_SETTINGS_NUMBER;
+    int version = 3;
+    EEPROM.put(offset, magic);
+    offset += sizeof(magic);
+    EEPROM.put(offset, version);
+    offset += sizeof(version);
+
+    Schedule *s = getSchedule();
+    offset = s->putInEEPROM(offset);
+    s = s->next();
+    offset = s->putInEEPROM(offset); 
+
+    EEPROM.commit();
+    EEPROM.end();
 }
