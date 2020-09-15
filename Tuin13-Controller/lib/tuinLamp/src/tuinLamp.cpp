@@ -6,9 +6,9 @@
 
 #ifdef TESTDEVICE
 #define debug(args...) \
-    if (m_debug) Serial.print(args)
+    { if (m_debug) { Serial.print(args); } }
 #define debugln(args...) \
-    if (m_debug) Serial.println(args)
+    { if (m_debug) { Serial.println(args); } }
 #else
 #define debug(args...)
 #define debugln(args...)
